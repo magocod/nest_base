@@ -4,6 +4,12 @@ import { User, Role, Permission } from '../auth/entities';
 import { DataSource, Repository } from 'typeorm';
 import { RoleNames, PermissionNames } from '../auth/constants';
 
+export enum defaultEmails {
+  SUPER_USER = 'superuser@yopmail.com',
+  ADMIN = 'admin@yopmail.com',
+  USER = 'user@yopmail.com',
+}
+
 @Injectable()
 export class SeedService {
   // not working without nest app
@@ -21,6 +27,11 @@ export class SeedService {
     this.userRepository = dataSource.getRepository(User);
     this.roleRepository = dataSource.getRepository(Role);
     this.permissionRepository = dataSource.getRepository(Permission);
+  }
+
+  // for testing
+  getDataSource(): DataSource {
+    return this.dataSource;
   }
 
   /**
@@ -72,41 +83,41 @@ export class SeedService {
       }),
     });
 
-    await this.userRepository.upsert(
+    await this.userRepository.save(
       await this.userRepository.create({
-        email: 'superuser@yopmail.com',
+        email: defaultEmails.SUPER_USER,
         password: '123*Abc',
         fullName: 'superuser',
         roles: [superUser],
       }),
-      ['email'],
+      // ['email'],
     );
 
-    await this.userRepository.upsert(
+    await this.userRepository.save(
       await this.userRepository.create({
-        email: 'admin@yopmail.com',
+        email: defaultEmails.ADMIN,
         password: '123*Abc',
         fullName: 'admin',
         roles: [admin],
       }),
-      ['email'],
+      // ['email'],
     );
 
-    await this.userRepository.upsert(
+    await this.userRepository.save(
       await this.userRepository.create({
-        email: 'user@yopmail.com',
+        email: defaultEmails.USER,
         password: '123*Abc',
         fullName: 'superuser',
         roles: [user],
       }),
-      ['email'],
+      // ['email'],
     );
 
     // console.log(
     //   JSON.stringify(
     //     await this.userRepository.find({
     //       relations: {
-    //         rolesDb: {
+    //         roles: {
     //           permissions: true,
     //         },
     //       },

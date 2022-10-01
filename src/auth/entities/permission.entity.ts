@@ -5,7 +5,7 @@ import {
   ManyToMany,
   CreateDateColumn,
   UpdateDateColumn,
-  JoinTable,
+  // JoinTable,
 } from 'typeorm';
 
 import { Role } from './role.entity';
@@ -21,6 +21,11 @@ export class Permission {
   @Column('text')
   description!: string;
 
+  @Column('bool', {
+    default: true,
+  })
+  isActive: boolean;
+
   @CreateDateColumn()
   createdAt!: Date;
 
@@ -28,6 +33,6 @@ export class Permission {
   updatedAt!: Date;
 
   @ManyToMany(() => Role, (role: Role) => role.permissions)
-  @JoinTable()
+  // @JoinTable()
   roles!: Role[];
 }

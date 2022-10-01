@@ -66,6 +66,7 @@ jobs:
         cache: 'npm'
     - run: npm ci
     - run: npm run build --if-present
+    - run: npm run migration:run
     - run: npm run test:cov
       env:
         # The hostname used to communicate with the PostgreSQL service container

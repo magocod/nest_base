@@ -10,7 +10,11 @@ import { User, Role, Permission } from './auth/entities';
 
 import { EnvConfiguration } from './config/env.config';
 
+// import { UserCreate1664658587799 } from './migration/1664658587799-UserCreate';
+
 export const globalPrefix = 'api';
+
+import './data-source'
 
 export function configBaseModules() {
   return [
@@ -25,8 +29,12 @@ export function configBaseModules() {
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       // autoLoadEntities: true,
-      synchronize: true,
+      // logging: false,
+      synchronize: false, // only for quick tests
       entities: [User, Role, Permission],
+      // example generate -> typeorm migration:create ./src/migration/UserCreate
+      // migrations: ['dist/migration/**/*.js'],
+      // migrations: [UserCreate1664658587799],
     }),
   ];
 }
