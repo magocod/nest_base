@@ -1,11 +1,14 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { SeedService } from './seed.service';
+import { In, Repository } from 'typeorm';
+import { SeedService, defaultEmails } from './seed.service';
 
 import { configBaseModules } from '../app.module';
+import { User } from '../auth/entities';
 
 describe('SeedService', () => {
   let service: SeedService;
   let module: TestingModule;
+  let userRep: Repository<User>;
 
   beforeEach(async () => {
     module = await Test.createTestingModule({
@@ -14,9 +17,13 @@ describe('SeedService', () => {
     }).compile();
 
     service = module.get<SeedService>(SeedService);
+    userRep = service.getDataSource().getRepository(User);
+
+    await userRep.delete({ email: In(Object.values(defaultEmails)) });
   });
 
   afterEach(async () => {
+    await userRep.delete({ email: In(Object.values(defaultEmails)) });
     await module.close();
   });
 
