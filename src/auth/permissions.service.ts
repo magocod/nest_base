@@ -4,6 +4,7 @@ import { UpdatePermissionDto } from './dto/update-permission.dto';
 
 @Injectable()
 export class PermissionsService {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   create(createPermissionDto: CreatePermissionDto) {
     return 'This action adds a new permission';
   }
@@ -16,6 +17,7 @@ export class PermissionsService {
     return `This action returns a #${id} permission`;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   update(id: number, updatePermissionDto: UpdatePermissionDto) {
     return `This action updates a #${id} permission`;
   }
