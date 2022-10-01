@@ -75,6 +75,7 @@ jobs:
         DB_PASSWORD: postgres
         DB_NAME: postgres
         DB_USERNAME: postgres
+        JWT_SECRET: secret
     - run: npm run test:e2e
       env:
         # The hostname used to communicate with the PostgreSQL service container
@@ -84,3 +85,4 @@ jobs:
         DB_PASSWORD: postgres
         DB_NAME: postgres
         DB_USERNAME: postgres
+        JWT_SECRET: secret
