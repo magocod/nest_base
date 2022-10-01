@@ -16,7 +16,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [16.x, 18.x]
+        node-version: [16.x]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     services:
@@ -33,6 +33,9 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
+        ports:
+          # Maps tcp port 5432 on service container to the host
+          - 5432:5432
 
     steps:
     - uses: actions/checkout@v3
@@ -41,9 +44,6 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-    - run: npm ci
-    - run: npm run build --if-present
-    - run: npm run test:cov
       env:
         # The hostname used to communicate with the PostgreSQL service container
         DB_HOST: localhost
@@ -52,3 +52,6 @@ jobs:
         DB_PASSWORD: postgres
         DB_NAME: postgres
         DB_USERNAME: postgres
+    - run: npm ci
+    - run: npm run build --if-present
+    - run: npm run test:cov
