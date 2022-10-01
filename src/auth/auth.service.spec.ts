@@ -11,6 +11,7 @@ import { AuthModule } from './auth.module';
 import { configBaseModules } from '../app.module';
 
 import { generateUser } from '../../test/fixtures';
+import { PASSWORD_PATTERN } from './constants';
 
 describe('AuthService', () => {
   let service: AuthService;
@@ -32,7 +33,7 @@ describe('AuthService', () => {
   it('create user successfully', async () => {
     const data = {
       email: faker.internet.email(),
-      password: faker.internet.password(),
+      password: faker.internet.password(10, false, PASSWORD_PATTERN),
       fullName: faker.name.fullName(),
     };
     const payload = await service.create(data);
