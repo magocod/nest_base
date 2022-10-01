@@ -44,6 +44,9 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
+    - run: npm ci
+    - run: npm run build --if-present
+    - run: npm run test:cov
       env:
         # The hostname used to communicate with the PostgreSQL service container
         DB_HOST: localhost
@@ -52,6 +55,3 @@ jobs:
         DB_PASSWORD: postgres
         DB_NAME: postgres
         DB_USERNAME: postgres
-    - run: npm ci
-    - run: npm run build --if-present
-    - run: npm run test:cov
