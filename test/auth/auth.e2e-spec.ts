@@ -1,5 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 import { validate } from 'class-validator';
 
 import supertest from 'supertest';
@@ -7,16 +8,27 @@ import * as request from 'supertest';
 import { faker } from '@faker-js/faker';
 import { AppModule, globalPrefix, configApp } from './../../src/app.module';
 import { AppService } from './../../src/app.service';
-import { CreateUserDto } from './../../src/auth/dto';
+import { CreateUserDto, LoginUserDto } from './../../src/auth/dto';
+import {
+  CREDENTIALS_INVALID_EMAIL,
+  CREDENTIALS_INVALID_PASSWORD,
+} from '../../src/auth/messages';
 
-import { generateUser } from '../fixtures';
+import {
+  generateUser,
+  generatePassword,
+  generateAuthHeader,
+} from '../fixtures';
 
 const baseRoute = `/${globalPrefix}/auth`;
 const routeRegister = `${baseRoute}/register`;
+const routeLogin = `${baseRoute}/login`;
+const routeCheckStatus = `${baseRoute}/check-status`;
 
 describe('Auth - /auth (e2e)', () => {
   let app: INestApplication;
   let service: AppService;
+  let jwtService: JwtService;
   let httpClient: supertest.SuperTest<supertest.Test>;
 
   beforeEach(async () => {
@@ -25,6 +37,7 @@ describe('Auth - /auth (e2e)', () => {
     }).compile();
 
     service = moduleFixture.get<AppService>(AppService);
+    jwtService = moduleFixture.get<JwtService>(JwtService);
 
     app = moduleFixture.createNestApplication();
     configApp(app);
@@ -41,7 +54,7 @@ describe('Auth - /auth (e2e)', () => {
     it('register user successfully', async () => {
       const reqData = {
         email: faker.internet.email(),
-        password: faker.internet.password(7, false, undefined, 'A1*'),
+        password: generatePassword(),
         fullName: faker.name.fullName(),
       };
       const res = await httpClient.post(routeRegister).send(reqData);
@@ -66,10 +79,10 @@ describe('Auth - /auth (e2e)', () => {
     });
 
     it('duplicate user email', async () => {
-      const { user } = await generateUser(service.getDataSource());
+      const { user, password } = await generateUser(service.getDataSource());
       const reqData = {
         email: user.email,
-        password: user.password,
+        password,
         fullName: user.fullName,
       };
       const res = await httpClient.post(routeRegister).send(reqData);
@@ -78,6 +91,77 @@ describe('Auth - /auth (e2e)', () => {
       expect(res.body.message).toEqual(
         `Key (email)=(${reqData.email.toLowerCase()}) already exists.`,
       );
+    });
+  });
+
+  describe('login', function () {
+    it('valid credentials', async () => {
+      const { user, password } = await generateUser(service.getDataSource());
+      const reqData = {
+        email: user.email,
+        password,
+      };
+      const res = await httpClient.post(routeLogin).send(reqData);
+
+      expect(res.status).toEqual(201);
+      expect(res.body.id).toEqual(user.id);
+      expect(res.body.token).toBeDefined();
+    });
+
+    it('validate login form', async () => {
+      const res = await httpClient.post(routeLogin).send({});
+
+      const validation = await validate(new LoginUserDto());
+
+      expect(res.status).toEqual(400);
+      expect(res.body.message).toEqual(
+        validation.flatMap((v) => {
+          return Object.values(v.constraints);
+        }),
+      );
+    });
+
+    it('invalid credentials - password', async () => {
+      const { user } = await generateUser(service.getDataSource());
+      const reqData = {
+        email: user.email,
+        password: generatePassword(),
+      };
+      const res = await httpClient.post(routeLogin).send(reqData);
+
+      expect(res.status).toEqual(401);
+      expect(res.body.message).toEqual(CREDENTIALS_INVALID_PASSWORD);
+    });
+
+    it('invalid credentials - email', async () => {
+      const reqData = {
+        email: 'invalidemail@domain.com',
+        password: generatePassword(),
+      };
+      const res = await httpClient.post(routeLogin).send(reqData);
+
+      expect(res.status).toEqual(401);
+      expect(res.body.message).toEqual(CREDENTIALS_INVALID_EMAIL);
+    });
+  });
+
+  describe('authenticated user', function () {
+    it('valid token', async () => {
+      const { user } = await generateUser(service.getDataSource());
+      const res = await httpClient
+        .get(routeCheckStatus)
+        .set('Authorization', generateAuthHeader(user, jwtService).authHeader);
+
+      expect(res.status).toEqual(200);
+      expect(res.body.id).toEqual(user.id);
+      expect(res.body.token).toBeDefined();
+    });
+
+    it('without providing token', async () => {
+      const res = await httpClient.get(routeCheckStatus);
+
+      expect(res.status).toEqual(401);
+      expect(res.body.message).toEqual('Unauthorized');
     });
   });
 });
