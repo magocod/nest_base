@@ -8,6 +8,8 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+
+import * as bcrypt from 'bcrypt';
 // import { Role } from './role.entity';
 
 @Entity('users')
@@ -47,6 +49,14 @@ export class User {
 
   // @ManyToMany(() => Role, (role: Role) => role.users)
   // roles!: Role[];
+
+  @BeforeInsert()
+  // @BeforeUpdate() // error update
+  hashPassword() {
+    if (this.password) {
+      this.password = bcrypt.hashSync(this.password, 10);
+    }
+  }
 
   @BeforeInsert()
   checkFieldsBeforeInsert() {

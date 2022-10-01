@@ -13,6 +13,10 @@ import * as bcrypt from 'bcrypt';
 import { User } from './entities/user.entity';
 import { LoginUserDto, CreateUserDto } from './dto';
 import { JwtPayload } from './interfaces/jwt-payload.interface';
+import {
+  CREDENTIALS_INVALID_EMAIL,
+  CREDENTIALS_INVALID_PASSWORD,
+} from './messages';
 
 @Injectable()
 export class AuthService {
@@ -39,7 +43,6 @@ export class AuthService {
         ...user,
         token: this.getJwtToken({ id: user.id }),
       };
-      // TODO: Retornar el JWT de acceso
     } catch (error) {
       this.handleDBErrors(error);
     }
@@ -53,11 +56,10 @@ export class AuthService {
       select: { email: true, password: true, id: true }, //! OJO!
     });
 
-    if (!user)
-      throw new UnauthorizedException('Credentials are not valid (email)');
+    if (!user) throw new UnauthorizedException(CREDENTIALS_INVALID_EMAIL);
 
     if (!bcrypt.compareSync(password, user.password))
-      throw new UnauthorizedException('Credentials are not valid (password)');
+      throw new UnauthorizedException(CREDENTIALS_INVALID_PASSWORD);
 
     return {
       ...user,
