@@ -14,7 +14,7 @@ import { EnvConfiguration } from './config/env.config';
 
 export const globalPrefix = 'api';
 
-import './data-source'
+import './data-source';
 
 export function configBaseModules() {
   return [

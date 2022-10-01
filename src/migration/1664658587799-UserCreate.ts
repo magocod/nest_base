@@ -41,7 +41,7 @@ export class UserCreate1664658587799 implements MigrationInterface {
             type: 'text',
             isNullable: false,
             isArray: true,
-            default:  "'{user}'::text[]"
+            default: "'{user}'::text[]",
           },
           {
             name: 'createdAt',
