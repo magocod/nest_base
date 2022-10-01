@@ -15,10 +15,10 @@ export class Permission {
   @PrimaryGeneratedColumn()
   id!: number;
 
-  @Column()
+  @Column('text')
   name!: string;
 
-  @Column()
+  @Column('text')
   description!: string;
 
   @CreateDateColumn()

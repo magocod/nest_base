@@ -30,7 +30,7 @@ export class UserRoleGuard implements CanActivate {
 
     if (!user) throw new BadRequestException('User not found');
 
-    for (const role of user.roles) {
+    for (const role of user.rolesStr) {
       if (validRoles.includes(role)) {
         return true;
       }
