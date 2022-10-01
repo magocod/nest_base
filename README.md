@@ -9,37 +9,71 @@
 ## Installation
 
 ```bash
-$ npm install
+npm install
 ```
 
 ## Docker
+
 ```bash
 docker-compose up -d
 ```
 
-## Running the app
+### Configure db
+
+- compile the application
 
 ```bash
-# development
-$ npm run start
+npm run build
+```
 
-# watch mode
-$ npm run start:dev
+- run db migrations
 
-# production mode
+```bash
+npm run migration:run
+```
+
+### Populate the database (optional)
+
+```bash
+npm run seed:db
+```
+
+## Running the app
+
+- development
+
+```bash
+npm run start
+```
+
+- watch mode
+
+```bash
+npm run start:dev
+```
+
+- production mode
+
+```bash
 $ npm run start:prod
 ```
 
 ## Test
 
+- unit tests
+
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+npm run test
 ```
 
+- e2e tests
+
+```bash
+npm run test:e2e
+```
+
+- test coverage
+
+```bash
+npm run test:cov
+```

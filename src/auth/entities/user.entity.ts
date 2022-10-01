@@ -4,17 +4,18 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  // ManyToMany,
+  JoinTable,
+  ManyToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
 import * as bcrypt from 'bcrypt';
-// import { Role } from './role.entity';
+import { Role } from './role.entity';
 
 @Entity('users')
 export class User {
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryGeneratedColumn()
   id: string;
 
   @Column('text', {
@@ -35,11 +36,12 @@ export class User {
   })
   isActive: boolean;
 
+  // FIXME move to bd relation
   @Column('text', {
     array: true,
     default: ['user'],
   })
-  roles: string[];
+  rolesStr: string[];
 
   @CreateDateColumn()
   createdAt!: Date;
@@ -47,8 +49,9 @@ export class User {
   @UpdateDateColumn()
   updatedAt!: Date;
 
-  // @ManyToMany(() => Role, (role: Role) => role.users)
-  // roles!: Role[];
+  @ManyToMany(() => Role, (role: Role) => role.users)
+  @JoinTable()
+  roles!: Role[];
 
   @BeforeInsert()
   // @BeforeUpdate() // error update
