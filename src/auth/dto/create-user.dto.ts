@@ -6,6 +6,8 @@ import {
   MinLength,
 } from 'class-validator';
 
+import { PASSWORD_PATTERN } from '../constants';
+
 export class CreateUserDto {
   @IsString()
   @IsEmail()
@@ -14,7 +16,7 @@ export class CreateUserDto {
   @IsString()
   @MinLength(6)
   @MaxLength(50)
-  @Matches(/(?:(?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/, {
+  @Matches(PASSWORD_PATTERN, {
     message:
       'The password must have a Uppercase, lowercase letter and a number',
   })

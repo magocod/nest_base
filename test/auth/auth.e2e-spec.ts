@@ -10,7 +10,6 @@ import { AppService } from './../../src/app.service';
 import { CreateUserDto } from './../../src/auth/dto';
 
 import { generateUser } from '../fixtures';
-import { PASSWORD_PATTERN } from '../../src/auth';
 
 const baseRoute = `/${globalPrefix}/auth`;
 const routeRegister = `${baseRoute}/register`;
@@ -42,7 +41,7 @@ describe('Auth - /auth (e2e)', () => {
     it('register user successfully', async () => {
       const reqData = {
         email: faker.internet.email(),
-        password: faker.internet.password(10, false, PASSWORD_PATTERN),
+        password: faker.internet.password(7, false, undefined, 'A1*'),
         fullName: faker.name.fullName(),
       };
       const res = await httpClient.post(routeRegister).send(reqData);
