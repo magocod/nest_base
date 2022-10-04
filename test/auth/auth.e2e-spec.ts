@@ -18,20 +18,28 @@ import {
   generateUser,
   generatePassword,
   generateAuthHeader,
+  generateRole,
+  upsertPermission,
 } from '../fixtures';
+import { Permission } from '../../src/auth/entities';
+import { PermissionNames } from '../../src/auth/interfaces';
 
 const baseRoute = `/${globalPrefix}/auth`;
 const routeRegister = `${baseRoute}/register`;
 const routeLogin = `${baseRoute}/login`;
 const routeCheckStatus = `${baseRoute}/check-status`;
+const routePrivate = `${baseRoute}/private`;
+const routePrivate2 = `${baseRoute}/private2`;
+const routePrivate3 = `${baseRoute}/private3`;
 
 describe('Auth - /auth (e2e)', () => {
   let app: INestApplication;
   let service: AppService;
   let jwtService: JwtService;
   let httpClient: supertest.SuperTest<supertest.Test>;
+  let permissions: Permission[] = [];
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
     }).compile();
@@ -44,9 +52,11 @@ describe('Auth - /auth (e2e)', () => {
 
     await app.init();
     httpClient = request(app.getHttpServer());
+
+    permissions = await upsertPermission(service.getDataSource());
   });
 
-  afterEach(async () => {
+  afterAll(async () => {
     await app.close();
   });
 
@@ -162,6 +172,66 @@ describe('Auth - /auth (e2e)', () => {
 
       expect(res.status).toEqual(401);
       expect(res.body.message).toEqual('Unauthorized');
+    });
+  });
+
+  describe('authorize user', function () {
+    it('no permissions required', async () => {
+      const { user } = await generateUser(service.getDataSource());
+      const res = await httpClient
+        .get(routePrivate)
+        .set('Authorization', generateAuthHeader(user, jwtService).authHeader);
+
+      expect(res.status).toEqual(200);
+      expect(res.body.user.id).toEqual(user.id);
+    });
+
+    it('requires at least one permissions', async () => {
+      const role = await generateRole(service.getDataSource(), {
+        permissions,
+      });
+      const { user } = await generateUser(service.getDataSource(), {
+        roles: [role],
+      });
+      const res = await httpClient
+        .get(routePrivate2)
+        .set('Authorization', generateAuthHeader(user, jwtService).authHeader);
+
+      expect(res.status).toEqual(200);
+      expect(res.body.user.id).toEqual(user.id);
+    });
+
+    it('have the required permission', async () => {
+      const role = await generateRole(service.getDataSource(), {
+        permissions: permissions.filter((p) => {
+          return p.name === PermissionNames.EXAMPLE;
+        }),
+      });
+      const { user } = await generateUser(service.getDataSource(), {
+        roles: [role],
+      });
+      const res = await httpClient
+        .get(routePrivate3)
+        .set('Authorization', generateAuthHeader(user, jwtService).authHeader);
+
+      expect(res.status).toEqual(200);
+      expect(res.body.user.id).toEqual(user.id);
+    });
+
+    it('do not have the required permission', async () => {
+      const role = await generateRole(service.getDataSource(), {
+        permissions: permissions.filter((p) => {
+          return p.name === PermissionNames.USER;
+        }),
+      });
+      const { user } = await generateUser(service.getDataSource(), {
+        roles: [role],
+      });
+      const res = await httpClient
+        .get(routePrivate3)
+        .set('Authorization', generateAuthHeader(user, jwtService).authHeader);
+
+      expect(res.status).toEqual(403);
     });
   });
 });

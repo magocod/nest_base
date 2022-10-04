@@ -1,12 +1,11 @@
 import {
+  Body,
   Controller,
   Get,
-  Post,
-  Body,
-  UseGuards,
-  Req,
   Headers,
-  // SetMetadata,
+  Post,
+  Req,
+  UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiTags } from '@nestjs/swagger';
@@ -14,13 +13,13 @@ import { ApiTags } from '@nestjs/swagger';
 import { IncomingHttpHeaders } from 'http';
 
 import { AuthService } from './auth.service';
-import { RawHeaders, GetUser, Auth } from './decorators';
-import { RoleProtected } from './decorators/role-protected.decorator';
+import { Auth, GetUser, PermissionProtected, RawHeaders } from './decorators';
 
 import { CreateUserDto, LoginUserDto } from './dto';
 import { User } from './entities/user.entity';
-import { UserRoleGuard } from './guards/user-role.guard';
-import { ValidRoles } from './interfaces';
+
+import { UserPermissionGuard } from './guards';
+import { PermissionNames } from './interfaces';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -66,8 +65,8 @@ export class AuthController {
   // @SetMetadata('roles', ['admin','super-user'])
 
   @Get('private2')
-  @RoleProtected(ValidRoles.superUser, ValidRoles.admin)
-  @UseGuards(AuthGuard(), UserRoleGuard)
+  @PermissionProtected(PermissionNames.EXAMPLE, PermissionNames.USER)
+  @UseGuards(AuthGuard(), UserPermissionGuard)
   privateRoute2(@GetUser() user: User) {
     return {
       ok: true,
@@ -76,7 +75,7 @@ export class AuthController {
   }
 
   @Get('private3')
-  @Auth(ValidRoles.admin)
+  @Auth(PermissionNames.EXAMPLE)
   privateRoute3(@GetUser() user: User) {
     return {
       ok: true,

@@ -2,13 +2,11 @@ import { Injectable } from '@nestjs/common';
 // import { InjectRepository } from '@nestjs/typeorm';
 import { User, Role, Permission } from '../auth/entities';
 import { DataSource, Repository } from 'typeorm';
-import { RoleNames, PermissionNames } from '../auth/constants';
-
-export enum defaultEmails {
-  SUPER_USER = 'superuser@yopmail.com',
-  ADMIN = 'admin@yopmail.com',
-  USER = 'user@yopmail.com',
-}
+import {
+  RoleNames,
+  PermissionNames,
+  DefaultEmails,
+} from '../auth/interfaces/permission';
 
 @Injectable()
 export class SeedService {
@@ -85,7 +83,7 @@ export class SeedService {
 
     await this.userRepository.save(
       await this.userRepository.create({
-        email: defaultEmails.SUPER_USER,
+        email: DefaultEmails.SUPER_USER,
         password: '123*Abc',
         fullName: 'superuser',
         roles: [superUser],
@@ -95,7 +93,7 @@ export class SeedService {
 
     await this.userRepository.save(
       await this.userRepository.create({
-        email: defaultEmails.ADMIN,
+        email: DefaultEmails.ADMIN,
         password: '123*Abc',
         fullName: 'admin',
         roles: [admin],
@@ -105,7 +103,7 @@ export class SeedService {
 
     await this.userRepository.save(
       await this.userRepository.create({
-        email: defaultEmails.USER,
+        email: DefaultEmails.USER,
         password: '123*Abc',
         fullName: 'superuser',
         roles: [user],
