@@ -6,10 +6,12 @@ export type QueryString<T extends ObjectKey = TestQueryString> = {
   [key in T]?: unknown;
 };
 
+export const TESTING_DEFAULT_PAGINATION = 3;
+
 export function basicPagination(): QueryString {
   return {
-    page: 0,
-    perPage: 3,
+    page: 1,
+    perPage: TESTING_DEFAULT_PAGINATION,
   };
 }
 
