@@ -22,7 +22,7 @@ export class PermissionsController {
 
   @Get()
   findAll() {
-    return this.permissionsService.findAll();
+    return this.permissionsService.findAll({});
   }
 
   @Get(':id')
