@@ -21,3 +21,19 @@ export async function upsertPermission(ds: DataSource) {
 
   return permissions;
 }
+
+export async function generatePermission(
+  ds: DataSource,
+  data?: Partial<Permission>,
+) {
+  const permissionRep = ds.getRepository(Permission);
+
+  let permission = permissionRep.create({
+    name: faker.datatype.uuid(),
+    description: faker.datatype.uuid(),
+    ...data,
+  });
+  permission = await permissionRep.save(permission);
+
+  return permission;
+}

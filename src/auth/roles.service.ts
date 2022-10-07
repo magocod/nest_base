@@ -12,13 +12,17 @@ export class RolesService {
   constructor(
     @InjectRepository(Role)
     private readonly roleRepository: Repository<Role>,
-    @InjectRepository(Role)
+    @InjectRepository(Permission)
     private readonly permissionRepository: Repository<Permission>,
     private readonly dataSource: DataSource,
   ) {}
 
   getDataSource(): DataSource {
     return this.dataSource;
+  }
+
+  getRepository(): Repository<Role> {
+    return this.roleRepository;
   }
 
   async create(createRoleDto: CreateRoleDto) {
@@ -62,16 +66,40 @@ export class RolesService {
   }
 
   async findOne(id: number) {
-    const role = await this.roleRepository.findOneBy({ id });
+    const role = await this.roleRepository.findOne({
+      where: { id },
+      relations: {
+        permissions: true,
+      },
+    });
 
     if (!role) throw new NotFoundException(`Role with ${id} not found`);
 
     return role;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  update(id: number, updateRoleDto: UpdateRoleDto) {
-    return `This action updates a #${id} role`;
+  async update(id: number, updateRoleDto: UpdateRoleDto) {
+    // eslint-disable-next-line prefer-const
+    let { permissions, ...toUpdate } = updateRoleDto;
+
+    const role = await this.roleRepository.preload({ id, ...toUpdate });
+    if (!role) throw new NotFoundException(`Role with id: ${id} not found`);
+
+    if (permissions?.length > 0) {
+      permissions = await this.permissionRepository.find({
+        where: {
+          id: In(permissions),
+        },
+      });
+
+      if (permissions.length > 0) {
+        role.permissions = permissions;
+      }
+    }
+
+    await this.roleRepository.save(role);
+
+    return this.findOne(role.id);
   }
 
   async remove(id: number) {
