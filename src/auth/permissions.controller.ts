@@ -6,10 +6,11 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { PermissionsService } from './permissions.service';
-import { CreatePermissionDto } from './dto/create-permission.dto';
-import { UpdatePermissionDto } from './dto/update-permission.dto';
+import { CreatePermissionDto, UpdatePermissionDto } from './dto';
+import { SimplePaginationDto } from '../common/dtos/pagination.dto';
 
 @Controller('permissions')
 export class PermissionsController {
@@ -21,8 +22,8 @@ export class PermissionsController {
   }
 
   @Get()
-  findAll() {
-    return this.permissionsService.findAll({});
+  findAll(@Query() paginationDto: SimplePaginationDto) {
+    return this.permissionsService.findAll(paginationDto);
   }
 
   @Get(':id')
