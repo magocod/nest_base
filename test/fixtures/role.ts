@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker';
 import { DataSource } from 'typeorm';
 
-import { Role } from '../../src/auth/entities';
+import { Permission, Role } from '../../src/auth/entities';
 
 export async function generateRole(ds: DataSource, data?: Partial<Role>) {
   const roleRep = ds.getRepository(Role);
@@ -12,6 +12,20 @@ export async function generateRole(ds: DataSource, data?: Partial<Role>) {
     ...data,
   });
   role = await roleRep.save(role);
+
+  return role;
+}
+
+// ???
+export async function generateRoleWith(
+  ds: DataSource,
+  permissions: Permission[],
+) {
+  const role = await generateRole(ds, {
+    permissions,
+  });
+
+  // ...
 
   return role;
 }

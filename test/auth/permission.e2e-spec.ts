@@ -11,6 +11,8 @@ import {
   generateUser,
   generateAuthHeader,
   generatePermission,
+  generateRole,
+  upsertPermission,
 } from '../fixtures';
 import { SimplePaginationDto } from '../../src/common/dtos/pagination.dto';
 import {
@@ -23,6 +25,8 @@ import {
   addQueryString,
   QueryString,
 } from '../helpers';
+import { PermissionNames } from '../../src/auth/interfaces';
+import { Permission } from '../../src/auth/entities';
 
 const baseRoute = `/${globalPrefix}/permissions`;
 
@@ -31,6 +35,7 @@ describe('Permissions - /permissions (e2e)', () => {
   let service: AppService;
   let jwtService: JwtService;
   let httpClient: supertest.SuperTest<supertest.Test>;
+  let permissions: Permission[] = [];
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -45,15 +50,31 @@ describe('Permissions - /permissions (e2e)', () => {
 
     await app.init();
     httpClient = request(app.getHttpServer());
+
+    permissions = await upsertPermission(service.getDataSource());
   });
 
   afterAll(async () => {
     await app.close();
   });
 
+  it('must be authenticated', async function () {
+    const res = await httpClient.get(baseRoute);
+
+    expect(res.status).toEqual(401);
+    expect(res.body.message).toEqual('Unauthorized');
+  });
+
   describe('findAll', function () {
     it('unfiltered', async () => {
-      const { user } = await generateUser(service.getDataSource());
+      const role = await generateRole(service.getDataSource(), {
+        permissions: permissions.filter((p) => {
+          return p.name === PermissionNames.USER;
+        }),
+      });
+      const { user } = await generateUser(service.getDataSource(), {
+        roles: [role],
+      });
       await generatePermission(service.getDataSource());
 
       const res = await httpClient
@@ -69,7 +90,14 @@ describe('Permissions - /permissions (e2e)', () => {
     it('paginate', async () => {
       const qs: SimplePaginationDto = basicPagination();
       qs.perPage = TESTING_DEFAULT_PAGINATION;
-      const { user } = await generateUser(service.getDataSource());
+      const role = await generateRole(service.getDataSource(), {
+        permissions: permissions.filter((p) => {
+          return p.name === PermissionNames.USER;
+        }),
+      });
+      const { user } = await generateUser(service.getDataSource(), {
+        roles: [role],
+      });
       await generatePermission(service.getDataSource());
 
       const res = await httpClient

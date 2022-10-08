@@ -233,5 +233,14 @@ describe('Auth - /auth (e2e)', () => {
 
       expect(res.status).toEqual(403);
     });
+
+    it('no assigned role', async () => {
+      const { user } = await generateUser(service.getDataSource());
+      const res = await httpClient
+        .get(routePrivate3)
+        .set('Authorization', generateAuthHeader(user, jwtService).authHeader);
+
+      expect(res.status).toEqual(403);
+    });
   });
 });
