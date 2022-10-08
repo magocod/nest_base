@@ -11,7 +11,6 @@ import { AppService } from './../../src/app.service';
 import { CreateRoleDto, UpdateRoleDto } from './../../src/auth/dto';
 
 import {
-  generateUser,
   generateAuthHeader,
   generateRole,
   upsertPermission,
