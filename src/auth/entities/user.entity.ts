@@ -9,12 +9,14 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { ApiProperty } from '@nestjs/swagger';
 
 import * as bcrypt from 'bcrypt';
 import { Role } from './role.entity';
 
 @Entity('users')
 export class User {
+  @ApiProperty()
   @PrimaryGeneratedColumn()
   id: string;
 
@@ -23,32 +25,39 @@ export class User {
   })
   email: string;
 
+  @ApiProperty()
   @Column('text', {
     select: false,
   })
   password: string;
 
+  @ApiProperty()
   @Column('text')
   fullName: string;
 
+  @ApiProperty()
   @Column('bool', {
     default: true,
   })
   isActive: boolean;
 
   // FIXME move to bd relation
+  @ApiProperty()
   @Column('text', {
     array: true,
     default: ['user'],
   })
   rolesStr: string[];
 
+  @ApiProperty()
   @CreateDateColumn()
   createdAt!: Date;
 
+  @ApiProperty()
   @UpdateDateColumn()
   updatedAt!: Date;
 
+  @ApiProperty()
   @ManyToMany(() => Role, (role: Role) => role.users)
   @JoinTable()
   roles!: Role[];

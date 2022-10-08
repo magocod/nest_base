@@ -5,12 +5,15 @@ import {
   IsBoolean,
   IsInt,
 } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateRoleDto {
+  @ApiProperty()
   @IsString()
   @IsNotEmpty()
   name;
 
+  @ApiProperty()
   @IsString()
   description;
 
@@ -18,6 +21,7 @@ export class CreateRoleDto {
   @IsOptional()
   isActive?;
 
+  @ApiProperty()
   @IsInt({ each: true })
   @IsOptional()
   permissions?;

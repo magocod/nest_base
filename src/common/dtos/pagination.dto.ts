@@ -7,6 +7,7 @@ export class PaginationDto {
   @ApiProperty({
     default: 10,
     description: 'How many rows do you need',
+    required: false,
   })
   @IsOptional()
   @IsPositive()
@@ -16,6 +17,7 @@ export class PaginationDto {
   @ApiProperty({
     default: 0,
     description: 'How many rows do you want to skip',
+    required: false,
   })
   @IsOptional()
   @Min(0)
@@ -27,6 +29,7 @@ export class SimplePaginationDto {
   @ApiProperty({
     default: 10,
     description: 'How many rows do you need',
+    required: false,
   })
   @IsOptional()
   @IsPositive()
@@ -36,6 +39,7 @@ export class SimplePaginationDto {
   @ApiProperty({
     default: 0,
     description: 'How many rows do you want to skip',
+    required: false,
   })
   @IsOptional()
   @Min(0)

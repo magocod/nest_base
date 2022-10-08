@@ -11,10 +11,10 @@ import { AppService } from './../../src/app.service';
 import { CreateRoleDto, UpdateRoleDto } from './../../src/auth/dto';
 
 import {
-  generateUser,
   generateAuthHeader,
   generateRole,
   upsertPermission,
+  generateUserWith,
 } from '../fixtures';
 import { Permission, Role } from '../../src/auth/entities';
 import { SimplePaginationDto } from '../../src/common/dtos/pagination.dto';
@@ -29,6 +29,7 @@ import {
   addQueryString,
   QueryString,
 } from '../helpers';
+import { PermissionNames } from '../../src/auth/interfaces';
 
 const baseRoute = `/${globalPrefix}/roles`;
 
@@ -62,7 +63,11 @@ describe('Roles - /roles (e2e)', () => {
 
   describe('create', function () {
     it('only required data', async () => {
-      const { user } = await generateUser(service.getDataSource());
+      const { user } = await generateUserWith(service.getDataSource(), {
+        permissions: permissions.filter((p) => {
+          return p.name === PermissionNames.USER;
+        }),
+      });
       const data: CreateRoleDto = {
         name: faker.animal.insect(),
         description: faker.datatype.uuid(),
@@ -80,7 +85,11 @@ describe('Roles - /roles (e2e)', () => {
     });
 
     it('with optional data', async () => {
-      const { user } = await generateUser(service.getDataSource());
+      const { user } = await generateUserWith(service.getDataSource(), {
+        permissions: permissions.filter((p) => {
+          return p.name === PermissionNames.USER;
+        }),
+      });
       const data: CreateRoleDto = {
         name: faker.animal.insect(),
         description: faker.datatype.uuid(),
@@ -106,7 +115,11 @@ describe('Roles - /roles (e2e)', () => {
     });
 
     it('invalid data', async () => {
-      const { user } = await generateUser(service.getDataSource());
+      const { user } = await generateUserWith(service.getDataSource(), {
+        permissions: permissions.filter((p) => {
+          return p.name === PermissionNames.USER;
+        }),
+      });
       const data = {} as CreateRoleDto;
       const validation = await validate(new CreateRoleDto());
 
@@ -126,7 +139,11 @@ describe('Roles - /roles (e2e)', () => {
 
   describe('findAll', function () {
     it('unfiltered', async () => {
-      const { user } = await generateUser(service.getDataSource());
+      const { user } = await generateUserWith(service.getDataSource(), {
+        permissions: permissions.filter((p) => {
+          return p.name === PermissionNames.USER;
+        }),
+      });
       await generateRole(service.getDataSource());
 
       const res = await httpClient
@@ -142,7 +159,11 @@ describe('Roles - /roles (e2e)', () => {
     it('paginate', async () => {
       const qs: SimplePaginationDto = basicPagination();
       qs.perPage = TESTING_DEFAULT_PAGINATION;
-      const { user } = await generateUser(service.getDataSource());
+      const { user } = await generateUserWith(service.getDataSource(), {
+        permissions: permissions.filter((p) => {
+          return p.name === PermissionNames.USER;
+        }),
+      });
       await generateRole(service.getDataSource());
 
       const res = await httpClient
@@ -158,7 +179,11 @@ describe('Roles - /roles (e2e)', () => {
 
   describe('findOne', function () {
     it('valid param', async () => {
-      const { user } = await generateUser(service.getDataSource());
+      const { user } = await generateUserWith(service.getDataSource(), {
+        permissions: permissions.filter((p) => {
+          return p.name === PermissionNames.USER;
+        }),
+      });
       const { id } = await generateRole(service.getDataSource());
 
       const res = await httpClient
@@ -181,7 +206,11 @@ describe('Roles - /roles (e2e)', () => {
     // });
 
     it('not found', async () => {
-      const { user } = await generateUser(service.getDataSource());
+      const { user } = await generateUserWith(service.getDataSource(), {
+        permissions: permissions.filter((p) => {
+          return p.name === PermissionNames.USER;
+        }),
+      });
       const res = await httpClient
         .get(`${baseRoute}/-1`)
         .set('Authorization', generateAuthHeader(user, jwtService).authHeader);
@@ -198,7 +227,11 @@ describe('Roles - /roles (e2e)', () => {
         name: faker.animal.insect(),
         description: faker.datatype.uuid(),
       };
-      const { user } = await generateUser(service.getDataSource());
+      const { user } = await generateUserWith(service.getDataSource(), {
+        permissions: permissions.filter((p) => {
+          return p.name === PermissionNames.USER;
+        }),
+      });
       const res = await httpClient
         .patch(`${baseRoute}/${id}`)
         .set('Authorization', generateAuthHeader(user, jwtService).authHeader)
@@ -221,7 +254,11 @@ describe('Roles - /roles (e2e)', () => {
           return p.id;
         }),
       };
-      const { user } = await generateUser(service.getDataSource());
+      const { user } = await generateUserWith(service.getDataSource(), {
+        permissions: permissions.filter((p) => {
+          return p.name === PermissionNames.USER;
+        }),
+      });
       const res = await httpClient
         .patch(`${baseRoute}/${id}`)
         .set('Authorization', generateAuthHeader(user, jwtService).authHeader)
@@ -242,8 +279,11 @@ describe('Roles - /roles (e2e)', () => {
     it('empty data, validate form', async () => {
       const role = await generateRole(service.getDataSource());
       const data = {} as UpdateRoleDto;
-      const validation = await validate(new CreateRoleDto());
-      const { user } = await generateUser(service.getDataSource());
+      const { user } = await generateUserWith(service.getDataSource(), {
+        permissions: permissions.filter((p) => {
+          return p.name === PermissionNames.USER;
+        }),
+      });
       const res = await httpClient
         .patch(`${baseRoute}/${role.id}`)
         .set('Authorization', generateAuthHeader(user, jwtService).authHeader)
@@ -253,12 +293,7 @@ describe('Roles - /roles (e2e)', () => {
         .getRepository(Role)
         .findOne({ where: { id: role.id } });
 
-      expect(res.status).toEqual(400);
-      expect(res.body.message).toEqual(
-        validation.flatMap((v) => {
-          return Object.values(v.constraints);
-        }),
-      );
+      expect(res.status).toEqual(200);
       expect(sortObjectStringify(role)).toEqual(sortObjectStringify(roleDb));
     });
 
@@ -267,7 +302,11 @@ describe('Roles - /roles (e2e)', () => {
         name: faker.animal.insect(),
         description: faker.datatype.uuid(),
       };
-      const { user } = await generateUser(service.getDataSource());
+      const { user } = await generateUserWith(service.getDataSource(), {
+        permissions: permissions.filter((p) => {
+          return p.name === PermissionNames.USER;
+        }),
+      });
       const res = await httpClient
         .patch(`${baseRoute}/${-1}`)
         .set('Authorization', generateAuthHeader(user, jwtService).authHeader)
@@ -280,20 +319,24 @@ describe('Roles - /roles (e2e)', () => {
 
   describe('delete', function () {
     it('valid param', async () => {
-      const { user } = await generateUser(service.getDataSource());
+      const { user } = await generateUserWith(service.getDataSource(), {
+        permissions: permissions.filter((p) => {
+          return p.name === PermissionNames.USER;
+        }),
+      });
       const { id } = await generateRole(service.getDataSource());
 
       const res = await httpClient
         .delete(`${baseRoute}/${id}`)
         .set('Authorization', generateAuthHeader(user, jwtService).authHeader);
-      const role = await service
+      const roleDel = await service
         .getDataSource()
         .getRepository(Role)
         .findOne({ where: { id } });
 
       expect(res.status).toEqual(200);
       expect(res.body.id).toBeUndefined();
-      expect(role).toBeNull();
+      expect(roleDel).toBeNull();
     });
 
     // FIXME test e2e roles
@@ -308,7 +351,11 @@ describe('Roles - /roles (e2e)', () => {
     // });
 
     it('not found', async () => {
-      const { user } = await generateUser(service.getDataSource());
+      const { user } = await generateUserWith(service.getDataSource(), {
+        permissions: permissions.filter((p) => {
+          return p.name === PermissionNames.USER;
+        }),
+      });
       const res = await httpClient
         .delete(`${baseRoute}/${-1}`)
         .set('Authorization', generateAuthHeader(user, jwtService).authHeader);
