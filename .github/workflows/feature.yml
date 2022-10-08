@@ -5,15 +5,17 @@ name: Feature CI
 
 on:
   push:
-    - '*' # matches every branch that doesn't contain a '/'
-    - '*/*' # matches every branch containing a single '/'
-    - '**' # matches every branch
-    - '!master' # excludes master
+    branches:
+      - '*' # matches every branch that doesn't contain a '/'
+      - '*/*' # matches every branch containing a single '/'
+      - '**' # matches every branch
+      - '!master' # excludes master
   pull_request:
-    - '*' # matches every branch that doesn't contain a '/'
-    - '*/*' # matches every branch containing a single '/'
-    - '**' # matches every branch
-    - '!master' # excludes master
+    branches:
+      - '*' # matches every branch that doesn't contain a '/'
+      - '*/*' # matches every branch containing a single '/'
+      - '**' # matches every branch
+      - '!master' # excludes master
 
 jobs:
   lint:
