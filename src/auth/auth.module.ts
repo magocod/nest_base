@@ -12,6 +12,8 @@ import { PermissionsController } from './permissions.controller';
 import { RolesController } from './roles.controller';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { Permission, Role, User } from './entities';
+import { UsersController } from './users.controller';
+import { UsersService } from './users.service';
 
 @Module({
   imports: [
@@ -37,8 +39,19 @@ import { Permission, Role, User } from './entities';
     // }
     // })
   ],
-  controllers: [AuthController, PermissionsController, RolesController],
-  providers: [AuthService, PermissionsService, RolesService, JwtStrategy],
+  controllers: [
+    AuthController,
+    PermissionsController,
+    RolesController,
+    UsersController,
+  ],
+  providers: [
+    AuthService,
+    PermissionsService,
+    RolesService,
+    JwtStrategy,
+    UsersService,
+  ],
   exports: [TypeOrmModule, JwtStrategy, PassportModule, JwtModule],
 })
 export class AuthModule {}

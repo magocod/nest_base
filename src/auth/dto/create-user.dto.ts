@@ -9,6 +9,7 @@ import { ApiProperty } from '@nestjs/swagger';
 
 import { PASSWORD_PATTERN } from '../constants';
 
+// public registration
 export class CreateUserDto {
   @ApiProperty()
   @IsString()
@@ -30,3 +31,6 @@ export class CreateUserDto {
   @MinLength(1)
   fullName: string;
 }
+
+// admin registration
+export class AdminCreateUserDto {}
