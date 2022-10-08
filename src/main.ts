@@ -13,8 +13,8 @@ async function bootstrap() {
   configApp(app);
 
   const config = new DocumentBuilder()
-    .setTitle('soidsalud API')
-    .setDescription('soidsalud endpoints')
+    .setTitle('nest_base API')
+    .setDescription('nest_base endpoints')
     .setVersion('1.0')
     .build();
   const document = SwaggerModule.createDocument(app, config);
