@@ -103,6 +103,7 @@ describe('Roles - /roles (e2e)', () => {
         .set('Authorization', generateAuthHeader(user, jwtService).authHeader)
         .send(data);
 
+      expect(res.status).toEqual(201);
       expect(res.body.id).toBeDefined();
       expect(res.body.name).toEqual(data.name);
       expect(res.body.description).toEqual(data.description);
