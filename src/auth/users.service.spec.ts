@@ -156,7 +156,7 @@ describe('UsersService', () => {
       };
       const userUpdated = await service.update(user.id, data);
 
-      expect(userUpdated.id).toBeDefined();
+      expect(userUpdated.id).toEqual(user.id);
       expect(userUpdated.email).toEqual(data.email.toLowerCase());
       expect(userUpdated.fullName).toEqual(data.fullName);
       expect(userUpdated.password).toBeUndefined();
