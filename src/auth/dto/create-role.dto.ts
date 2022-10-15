@@ -11,18 +11,18 @@ export class CreateRoleDto {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
-  name;
+  name: string;
 
   @ApiProperty()
   @IsString()
-  description;
+  description: string;
 
   @IsBoolean()
   @IsOptional()
-  isActive?;
+  isActive?: boolean;
 
   @ApiProperty()
   @IsInt({ each: true })
   @IsOptional()
-  permissions?;
+  permissions?: number[];
 }

@@ -13,13 +13,12 @@ import {
   generateAuthHeader,
   upsertPermission,
   generateUserWith,
+  generatePassword,
+  generateRole,
+  generateUser,
 } from '../fixtures';
 import { Permission } from '../../src/auth/entities';
 import { SimplePaginationDto } from '../../src/common/dtos/pagination.dto';
-// import {
-//   DEFAULT_LIMIT_PAGINATION,
-//   PaginationKeys,
-// } from '../../src/common/utils';
 import {
   basicPagination,
   // sortObjectStringify,
@@ -28,6 +27,13 @@ import {
   QueryString,
 } from '../helpers';
 import { PermissionNames } from '../../src/auth/interfaces';
+import { AdminCreateUserDto, AdminUpdateUserDto } from '../../src/auth/dto';
+import { faker } from '@faker-js/faker';
+import { validate } from 'class-validator';
+import {
+  DEFAULT_LIMIT_PAGINATION,
+  PaginationKeys,
+} from '../../src/common/utils';
 
 const baseRoute = `/${globalPrefix}/users`;
 
@@ -66,12 +72,21 @@ describe('Users - /users (e2e)', () => {
           return p.name === PermissionNames.USER;
         }),
       });
-      // ...
+      const data: AdminCreateUserDto = {
+        email: faker.internet.email(),
+        fullName: faker.name.fullName(),
+        password: generatePassword(),
+      };
       const res = await httpClient
         .post(baseRoute)
-        .set('Authorization', generateAuthHeader(user, jwtService).authHeader);
+        .set('Authorization', generateAuthHeader(user, jwtService).authHeader)
+        .send(data);
 
       expect(res.status).toEqual(201);
+      expect(res.body.id).toBeDefined();
+      expect(res.body.email).toEqual(data.email.toLowerCase());
+      expect(res.body.fullName).toEqual(data.fullName);
+      expect(res.body.password).toBeUndefined();
     });
 
     it('with optional data', async () => {
@@ -80,28 +95,52 @@ describe('Users - /users (e2e)', () => {
           return p.name === PermissionNames.USER;
         }),
       });
-      // ...
+      const role = await generateRole(service.getDataSource());
+      const data: AdminCreateUserDto = {
+        email: faker.internet.email(),
+        fullName: faker.name.fullName(),
+        password: generatePassword(),
+        isActive: faker.datatype.boolean(),
+        roles: [role.id],
+      };
       const res = await httpClient
         .post(baseRoute)
-        .set('Authorization', generateAuthHeader(user, jwtService).authHeader);
+        .set('Authorization', generateAuthHeader(user, jwtService).authHeader)
+        .send(data);
 
       expect(res.status).toEqual(201);
+      expect(res.body.id).toBeDefined();
+      expect(res.body.email).toEqual(data.email.toLowerCase());
+      expect(res.body.fullName).toEqual(data.fullName);
+      expect(res.body.password).toBeUndefined();
+      expect(res.body.isActive).toEqual(data.isActive);
+      expect(
+        res.body.roles.every((p) => {
+          return data.roles.includes(p.id);
+        }),
+      ).toEqual(true);
     });
 
-    // it('invalid data', async () => {
-    //   const { user } = await generateUserWith(service.getDataSource(), {
-    //     permissions: permissions.filter((p) => {
-    //       return p.name === PermissionNames.USER;
-    //     }),
-    //   });
-    //   // ...
-    //
-    //   const res = await httpClient
-    //     .post(baseRoute)
-    //     .set('Authorization', generateAuthHeader(user, jwtService).authHeader);
-    //
-    //   expect(res.status).toEqual(400);
-    // });
+    it('invalid data', async () => {
+      const { user } = await generateUserWith(service.getDataSource(), {
+        permissions: permissions.filter((p) => {
+          return p.name === PermissionNames.USER;
+        }),
+      });
+      const validation = await validate(new AdminCreateUserDto());
+
+      const res = await httpClient
+        .post(baseRoute)
+        .set('Authorization', generateAuthHeader(user, jwtService).authHeader)
+        .send({});
+
+      expect(res.status).toEqual(400);
+      expect(res.body.message).toEqual(
+        validation.flatMap((v) => {
+          return Object.values(v.constraints);
+        }),
+      );
+    });
   });
 
   describe('findAll', function () {
@@ -118,6 +157,9 @@ describe('Users - /users (e2e)', () => {
         .set('Authorization', generateAuthHeader(user, jwtService).authHeader);
 
       expect(res.status).toEqual(200);
+      expect(Object.keys(res.body)).toEqual(PaginationKeys);
+      expect(res.body.page).toEqual(1);
+      expect(res.body.perPage).toEqual(DEFAULT_LIMIT_PAGINATION);
     });
 
     it('paginate', async () => {
@@ -135,6 +177,9 @@ describe('Users - /users (e2e)', () => {
         .set('Authorization', generateAuthHeader(user, jwtService).authHeader);
 
       expect(res.status).toEqual(200);
+      expect(Object.keys(res.body)).toEqual(PaginationKeys);
+      expect(res.body.page).toEqual(1);
+      expect(res.body.perPage).toEqual(TESTING_DEFAULT_PAGINATION);
     });
   });
 
@@ -145,13 +190,14 @@ describe('Users - /users (e2e)', () => {
           return p.name === PermissionNames.USER;
         }),
       });
-      const id = 1;
+      const other = await generateUser(service.getDataSource(), {});
 
       const res = await httpClient
-        .get(`${baseRoute}/${id}`)
+        .get(`${baseRoute}/${other.user.id}`)
         .set('Authorization', generateAuthHeader(user, jwtService).authHeader);
 
       expect(res.status).toEqual(200);
+      expect(res.body.id).toEqual(other.user.id);
     });
 
     // FIXME test e2e roles
@@ -165,80 +211,115 @@ describe('Users - /users (e2e)', () => {
     //   expect(res.body.id).toBeUndefined();
     // });
 
-    // it('not found', async () => {
-    //   const { user } = await generateUserWith(service.getDataSource(), {
-    //     permissions: permissions.filter((p) => {
-    //       return p.name === PermissionNames.USER;
-    //     }),
-    //   });
-    //   const res = await httpClient
-    //     .get(`${baseRoute}/-1`)
-    //     .set('Authorization', generateAuthHeader(user, jwtService).authHeader);
-    //
-    //   expect(res.status).toEqual(404);
-    //   expect(res.body.id).toBeUndefined();
-    // });
+    it('not found', async () => {
+      const { user } = await generateUserWith(service.getDataSource(), {
+        permissions: permissions.filter((p) => {
+          return p.name === PermissionNames.USER;
+        }),
+      });
+      const res = await httpClient
+        .get(`${baseRoute}/-1`)
+        .set('Authorization', generateAuthHeader(user, jwtService).authHeader);
+
+      expect(res.status).toEqual(404);
+      expect(res.body.id).toBeUndefined();
+    });
   });
 
   describe('update', function () {
     it('only required data', async () => {
-      const id = 1;
-      // ...
+      const other = await generateUser(service.getDataSource());
+      const data: AdminUpdateUserDto = {
+        email: faker.internet.email(),
+        fullName: faker.name.fullName(),
+      };
       const { user } = await generateUserWith(service.getDataSource(), {
         permissions: permissions.filter((p) => {
           return p.name === PermissionNames.USER;
         }),
       });
       const res = await httpClient
-        .patch(`${baseRoute}/${id}`)
-        .set('Authorization', generateAuthHeader(user, jwtService).authHeader);
+        .patch(`${baseRoute}/${other.user.id}`)
+        .set('Authorization', generateAuthHeader(user, jwtService).authHeader)
+        .send(data);
 
       expect(res.status).toEqual(200);
+      expect(res.body.id).toEqual(other.user.id);
+      expect(res.body.email).toEqual(data.email.toLowerCase());
+      expect(res.body.fullName).toEqual(data.fullName);
+      expect(res.body.password).toBeUndefined();
     });
 
     it('with optional data', async () => {
-      const id = 1;
-      // ...
+      const other = await generateUser(service.getDataSource());
+      const role = await generateRole(service.getDataSource());
+      const data: AdminUpdateUserDto = {
+        email: faker.internet.email(),
+        fullName: faker.name.fullName(),
+        password: generatePassword(),
+        isActive: faker.datatype.boolean(),
+        roles: [role.id],
+      };
       const { user } = await generateUserWith(service.getDataSource(), {
         permissions: permissions.filter((p) => {
           return p.name === PermissionNames.USER;
         }),
       });
       const res = await httpClient
-        .patch(`${baseRoute}/${id}`)
-        .set('Authorization', generateAuthHeader(user, jwtService).authHeader);
+        .patch(`${baseRoute}/${other.user.id}`)
+        .set('Authorization', generateAuthHeader(user, jwtService).authHeader)
+        .send(data);
 
       expect(res.status).toEqual(200);
+      expect(res.body.id).toEqual(other.user.id);
+      expect(res.body.email).toEqual(data.email.toLowerCase());
+      expect(res.body.fullName).toEqual(data.fullName);
+      expect(res.body.password).toBeUndefined();
+      expect(res.body.isActive).toEqual(data.isActive);
+      expect(
+        res.body.roles.every((p) => {
+          return data.roles.includes(p.id);
+        }),
+      ).toEqual(true);
     });
 
     it('empty data, validate form', async () => {
-      const id = 1;
-      // ...
+      const other = await generateUser(service.getDataSource());
+      delete other.user.password;
+      const data: AdminUpdateUserDto = {};
       const { user } = await generateUserWith(service.getDataSource(), {
         permissions: permissions.filter((p) => {
           return p.name === PermissionNames.USER;
         }),
       });
       const res = await httpClient
-        .patch(`${baseRoute}/${id}`)
-        .set('Authorization', generateAuthHeader(user, jwtService).authHeader);
+        .patch(`${baseRoute}/${other.user.id}`)
+        .set('Authorization', generateAuthHeader(user, jwtService).authHeader)
+        .send(data);
+      // const userDb = await service
+      //   .getDataSource()
+      //   .getRepository(User)
+      //   .findOne({ where: { id: other.user.id } });
 
       expect(res.status).toEqual(200);
+      // expect(sortObjectStringify(other.user)).toEqual(
+      //   sortObjectStringify(userDb),
+      // );
     });
 
-    // it('not found', async () => {
-    //   const { user } = await generateUserWith(service.getDataSource(), {
-    //     permissions: permissions.filter((p) => {
-    //       return p.name === PermissionNames.USER;
-    //     }),
-    //   });
-    //   const res = await httpClient
-    //     .patch(`${baseRoute}/${-1}`)
-    //     .set('Authorization', generateAuthHeader(user, jwtService).authHeader)
-    //
-    //   expect(res.status).toEqual(404);
-    //   expect(res.body.id).toBeUndefined();
-    // });
+    it('not found', async () => {
+      const { user } = await generateUserWith(service.getDataSource(), {
+        permissions: permissions.filter((p) => {
+          return p.name === PermissionNames.USER;
+        }),
+      });
+      const res = await httpClient
+        .patch(`${baseRoute}/${-1}`)
+        .set('Authorization', generateAuthHeader(user, jwtService).authHeader);
+
+      expect(res.status).toEqual(404);
+      expect(res.body.id).toBeUndefined();
+    });
   });
 
   describe('delete', function () {
@@ -248,10 +329,10 @@ describe('Users - /users (e2e)', () => {
           return p.name === PermissionNames.USER;
         }),
       });
-      const id = 1;
+      const other = await generateUser(service.getDataSource(), {});
 
       const res = await httpClient
-        .delete(`${baseRoute}/${id}`)
+        .delete(`${baseRoute}/${other.user.id}`)
         .set('Authorization', generateAuthHeader(user, jwtService).authHeader);
 
       expect(res.status).toEqual(200);
@@ -268,18 +349,18 @@ describe('Users - /users (e2e)', () => {
     //   expect(res.body.id).toBeUndefined();
     // });
 
-    // it('not found', async () => {
-    //   const { user } = await generateUserWith(service.getDataSource(), {
-    //     permissions: permissions.filter((p) => {
-    //       return p.name === PermissionNames.USER;
-    //     }),
-    //   });
-    //   const res = await httpClient
-    //     .delete(`${baseRoute}/${-1}`)
-    //     .set('Authorization', generateAuthHeader(user, jwtService).authHeader);
-    //
-    //   expect(res.status).toEqual(404);
-    //   expect(res.body.id).toBeUndefined();
-    // });
+    it('not found', async () => {
+      const { user } = await generateUserWith(service.getDataSource(), {
+        permissions: permissions.filter((p) => {
+          return p.name === PermissionNames.USER;
+        }),
+      });
+      const res = await httpClient
+        .delete(`${baseRoute}/${-1}`)
+        .set('Authorization', generateAuthHeader(user, jwtService).authHeader);
+
+      expect(res.status).toEqual(404);
+      expect(res.body.id).toBeUndefined();
+    });
   });
 });

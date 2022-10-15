@@ -18,7 +18,7 @@ import { Role } from './role.entity';
 export class User {
   @ApiProperty()
   @PrimaryGeneratedColumn()
-  id: string;
+  id: number;
 
   @Column('text', {
     unique: true,

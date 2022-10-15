@@ -81,19 +81,20 @@ export class RolesService {
   async update(id: number, updateRoleDto: UpdateRoleDto) {
     // eslint-disable-next-line prefer-const
     let { permissions, ...toUpdate } = updateRoleDto;
+    let permissionsInstances: Permission[] = [];
 
     const role = await this.roleRepository.preload({ id, ...toUpdate });
     if (!role) throw new NotFoundException(`Role with id: ${id} not found`);
 
     if (permissions?.length > 0) {
-      permissions = await this.permissionRepository.find({
+      permissionsInstances = await this.permissionRepository.find({
         where: {
           id: In(permissions),
         },
       });
 
-      if (permissions.length > 0) {
-        role.permissions = permissions;
+      if (permissionsInstances.length > 0) {
+        role.permissions = permissionsInstances;
       }
     }
 
