@@ -5,12 +5,13 @@ import {
   Body,
   Patch,
   Param,
-  Delete, Query,
+  Delete,
+  Query,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { AdminCreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from '../auth/dto/update-user.dto';
-import {SimplePaginationDto} from "../common/dtos/pagination.dto";
+import { SimplePaginationDto } from '../common/dtos/pagination.dto';
 
 @Controller('users')
 export class UsersController {

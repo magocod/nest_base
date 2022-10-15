@@ -1,6 +1,8 @@
 import {
   IsBoolean,
-  IsEmail, IsInt, IsOptional,
+  IsEmail,
+  IsInt,
+  IsOptional,
   IsString,
   Matches,
   MaxLength,

@@ -1,10 +1,10 @@
-import {Injectable, NotFoundException} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { AdminCreateUserDto, AdminUpdateUserDto } from './dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import {User, Role, Permission} from './entities';
+import { User, Role } from './entities';
 import { DataSource, In, Repository } from 'typeorm';
-import {SimplePaginationDto} from "../common/dtos/pagination.dto";
-import {generatePagination} from "../common/utils";
+import { SimplePaginationDto } from '../common/dtos/pagination.dto';
+import { generatePagination } from '../common/utils';
 
 @Injectable()
 export class UsersService {
@@ -56,7 +56,7 @@ export class UsersService {
       skip: offset,
       relations: {
         roles: {
-          permissions: true
+          permissions: true,
         },
       },
     });
@@ -72,8 +72,8 @@ export class UsersService {
       where: { id },
       relations: {
         roles: {
-          permissions: true
-        }
+          permissions: true,
+        },
       },
     });
 

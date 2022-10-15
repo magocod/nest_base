@@ -5,7 +5,11 @@ import { AuthModule } from './auth.module';
 import { configBaseModules } from '../app.module';
 import { AdminCreateUserDto, AdminUpdateUserDto } from './dto';
 import { faker } from '@faker-js/faker';
-import { generateRole, generateUser, generatePassword } from '../../test/fixtures';
+import {
+  generateRole,
+  generateUser,
+  generatePassword,
+} from '../../test/fixtures';
 import { TypeORMError } from 'typeorm';
 import { SimplePaginationDto } from '../common/dtos/pagination.dto';
 import { DEFAULT_LIMIT_PAGINATION, PaginationKeys } from '../common/utils';
@@ -86,7 +90,7 @@ describe('UsersService', () => {
       const data: AdminCreateUserDto = {
         email: user.email,
         fullName: faker.name.fullName(),
-        password: generatePassword()
+        password: generatePassword(),
       };
       try {
         await service.create(data);
