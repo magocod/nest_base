@@ -52,6 +52,12 @@ import { UsersService } from './users.service';
     JwtStrategy,
     UsersService,
   ],
-  exports: [TypeOrmModule, JwtStrategy, PassportModule, JwtModule],
+  exports: [
+    TypeOrmModule,
+    JwtStrategy,
+    PassportModule,
+    JwtModule,
+    UsersService,
+  ],
 })
 export class AuthModule {}

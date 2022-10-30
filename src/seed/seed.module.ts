@@ -4,9 +4,10 @@ import { SeedRunner } from './seed.command';
 import { ExampleRunner } from './example.command';
 
 import { configBaseModules } from '../app.module';
+import { AuthModule } from '../auth/auth.module';
 
 @Module({
-  imports: [...configBaseModules()],
+  imports: [...configBaseModules(), AuthModule],
   providers: [SeedService, SeedRunner, ExampleRunner],
 })
 export class SeedModule {}
