@@ -35,6 +35,10 @@ npm run migration:run
 ### Populate the database (optional)
 
 ```bash
+npm run seed:run
+```
+
+```bash
 npm run seed:db
 ```
 
