@@ -50,6 +50,7 @@ export class CatsService {
     return `This action returns a #${id} cat`;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   update(id: number, updateCatDto: UpdateCatDto) {
     return `This action updates a #${id} cat`;
   }

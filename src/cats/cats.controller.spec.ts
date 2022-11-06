@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { CatsController } from './cats.controller';
 // import { CatsService } from './cats.service';
-import {configBaseModules, mongoConfig} from '../app.module';
+import { configBaseModules, mongoConfig } from '../app.module';
 import { CatsModule } from './cats.module';
 
 describe('CatsController', () => {
@@ -10,10 +10,7 @@ describe('CatsController', () => {
 
   beforeEach(async () => {
     module = await Test.createTestingModule({
-      imports: [
-        ...configBaseModules(mongoConfig),
-        CatsModule,
-      ],
+      imports: [...configBaseModules(mongoConfig), CatsModule],
       // controllers: [CatsController],
       // providers: [CatsService],
     }).compile();
