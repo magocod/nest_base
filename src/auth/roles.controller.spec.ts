@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { RolesController } from './roles.controller';
 import { RolesService } from './roles.service';
 import { AuthModule } from './auth.module';
-import { configBaseModules } from '../app.module';
+import { configBaseModules, postgresConfig } from '../app.module';
 
 describe('RolesController', () => {
   let controller: RolesController;
@@ -10,7 +10,7 @@ describe('RolesController', () => {
 
   beforeEach(async () => {
     module = await Test.createTestingModule({
-      imports: [...configBaseModules(), AuthModule],
+      imports: [...configBaseModules(postgresConfig), AuthModule],
       controllers: [RolesController],
       providers: [RolesService],
     }).compile();

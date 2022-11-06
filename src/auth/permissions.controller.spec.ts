@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { PermissionsController } from './permissions.controller';
 import { PermissionsService } from './permissions.service';
 import { AuthModule } from './auth.module';
-import { configBaseModules } from '../app.module';
+import { configBaseModules, postgresConfig } from '../app.module';
 
 describe('PermissionsController', () => {
   let controller: PermissionsController;
@@ -10,7 +10,7 @@ describe('PermissionsController', () => {
 
   beforeEach(async () => {
     module = await Test.createTestingModule({
-      imports: [...configBaseModules(), AuthModule],
+      imports: [...configBaseModules(postgresConfig), AuthModule],
       controllers: [PermissionsController],
       providers: [PermissionsService],
     }).compile();

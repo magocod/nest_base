@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { In, Repository } from 'typeorm';
 import { SeedService } from './seed.service';
 
-import { configBaseModules } from '../app.module';
+import { configBaseModules, postgresConfig } from '../app.module';
 import { User } from '../auth/entities';
 import { DefaultEmails } from '../auth/interfaces';
 
@@ -13,7 +13,7 @@ describe('SeedService', () => {
 
   beforeEach(async () => {
     module = await Test.createTestingModule({
-      imports: configBaseModules(),
+      imports: configBaseModules(postgresConfig),
       providers: [SeedService],
     }).compile();
 

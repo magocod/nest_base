@@ -8,7 +8,7 @@ import {
 } from '../../test/helpers';
 
 import { AuthModule } from './auth.module';
-import { configBaseModules } from '../app.module';
+import { configBaseModules, postgresConfig } from '../app.module';
 
 import { generatePermission } from '../../test/fixtures';
 
@@ -18,7 +18,7 @@ describe('PermissionsService', () => {
 
   beforeEach(async () => {
     module = await Test.createTestingModule({
-      imports: [...configBaseModules(), AuthModule],
+      imports: [...configBaseModules(postgresConfig), AuthModule],
       providers: [PermissionsService],
     }).compile();
 

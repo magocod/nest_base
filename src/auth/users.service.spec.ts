@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { UsersService } from './users.service';
 
 import { AuthModule } from './auth.module';
-import { configBaseModules } from '../app.module';
+import { configBaseModules, postgresConfig } from '../app.module';
 import { AdminCreateUserDto, AdminUpdateUserDto } from './dto';
 import { faker } from '@faker-js/faker';
 import {
@@ -27,7 +27,7 @@ describe('UsersService', () => {
 
   beforeEach(async () => {
     module = await Test.createTestingModule({
-      imports: [...configBaseModules(), AuthModule],
+      imports: [...configBaseModules(postgresConfig), AuthModule],
       providers: [UsersService],
     }).compile();
 

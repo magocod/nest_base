@@ -63,6 +63,18 @@ jobs:
           # Maps tcp port 5432 on service container to the host
           - 5432:5432
 
+      mongodb:
+        image: mongo:6.0
+        options: >-
+          --health-cmd "echo 'db.runCommand("ping").ok' | mongosh --quiet"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+          --name mongo_container
+        ports:
+          # will assign a random free host port
+          - 27017/27017
+
     steps:
       - uses: actions/checkout@v3
       - name: Use Node.js ${{ matrix.node-version }}
@@ -92,6 +104,7 @@ jobs:
           DB_NAME: postgres
           DB_USERNAME: postgres
           JWT_SECRET: secret
+          MONGO_URL: mongodb://127.0.0.1:27017/nest_base?readPreference=primary
       - run: npm run test:e2e
         env:
           # The hostname used to communicate with the PostgreSQL service container
@@ -102,3 +115,4 @@ jobs:
           DB_NAME: postgres
           DB_USERNAME: postgres
           JWT_SECRET: secret
+          MONGO_URL: mongodb://127.0.0.1:27017/nest_base?readPreference=primary
