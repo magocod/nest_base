@@ -9,6 +9,7 @@ export const EnvConfiguration = () => ({
   DEFAULT_LIMIT: +process.env.DEFAULT_LIMIT || 5,
   HOST_API: process.env.HOST_API,
   JWT_SECRET: process.env.JWT_SECRET,
+  MONGO_URL: process.env.MONGO_URL,
 });
 
 const config = EnvConfiguration();

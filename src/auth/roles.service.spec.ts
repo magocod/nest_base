@@ -4,7 +4,7 @@ import { TypeORMError } from 'typeorm';
 import { faker } from '@faker-js/faker';
 import { RolesService } from './roles.service';
 import { AuthModule } from './auth.module';
-import { configBaseModules } from '../app.module';
+import { configBaseModules, postgresConfig } from '../app.module';
 import { CreateRoleDto, UpdateRoleDto } from './dto';
 
 import { upsertPermission, generateRole } from '../../test/fixtures';
@@ -25,7 +25,7 @@ describe('RolesService', () => {
 
   beforeEach(async () => {
     module = await Test.createTestingModule({
-      imports: [...configBaseModules(), AuthModule],
+      imports: [...configBaseModules(postgresConfig), AuthModule],
       providers: [RolesService],
     }).compile();
 

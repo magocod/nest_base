@@ -10,7 +10,7 @@ import { CreateUserDto, LoginUserDto } from './dto';
 import { User } from './entities';
 import { AuthService } from './auth.service';
 import { AuthModule } from './auth.module';
-import { configBaseModules } from '../app.module';
+import { configBaseModules, postgresConfig } from '../app.module';
 import {
   CREDENTIALS_INVALID_EMAIL,
   CREDENTIALS_INVALID_PASSWORD,
@@ -24,7 +24,7 @@ describe('AuthService', () => {
 
   beforeEach(async () => {
     module = await Test.createTestingModule({
-      imports: [...configBaseModules(), AuthModule],
+      imports: [...configBaseModules(postgresConfig), AuthModule],
       providers: [AuthService],
     }).compile();
 

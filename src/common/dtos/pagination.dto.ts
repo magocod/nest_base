@@ -46,3 +46,25 @@ export class SimplePaginationDto {
   @Type(() => Number) // enableImplicitConversions: true
   perPage?: number;
 }
+
+export class PaginationMongoDto {
+  @ApiProperty({
+    default: 10,
+    description: 'How many rows do you need',
+    required: false,
+  })
+  @IsOptional()
+  @IsPositive()
+  @Type(() => Number) // enableImplicitConversions: true
+  limit?: number;
+
+  @ApiProperty({
+    default: 0,
+    description: 'How many rows do you want to skip',
+    required: false,
+  })
+  @IsOptional()
+  @Min(0)
+  @Type(() => Number) // enableImplicitConversions: true
+  skip?: number;
+}

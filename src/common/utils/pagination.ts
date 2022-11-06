@@ -8,6 +8,13 @@ export interface Pagination<T> {
   total: number;
 }
 
+export interface PaginationMongo<T> {
+  data: T[];
+  skip: number;
+  limit: number;
+  total: number;
+}
+
 export function generatePagination<T>(
   pag: unknown = 1,
   pageSize: unknown = DEFAULT_LIMIT_PAGINATION,
@@ -52,3 +59,12 @@ export function generatePagination<T>(
 export const PaginationPayloadKeys = Object.keys(generatePagination());
 
 export const PaginationKeys = Object.keys(generatePagination().pagination);
+
+const paginationMongoDb: PaginationMongo<unknown> = {
+  data: [],
+  limit: 0,
+  skip: 0,
+  total: 0,
+};
+
+export const PaginationMongoKeys = Object.keys(paginationMongoDb);

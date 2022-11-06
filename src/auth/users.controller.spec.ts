@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
 import { AuthModule } from './auth.module';
-import { configBaseModules } from '../app.module';
+import { configBaseModules, postgresConfig } from '../app.module';
 
 describe('UsersController', () => {
   let controller: UsersController;
@@ -10,7 +10,7 @@ describe('UsersController', () => {
 
   beforeEach(async () => {
     module = await Test.createTestingModule({
-      imports: [...configBaseModules(), AuthModule],
+      imports: [...configBaseModules(postgresConfig), AuthModule],
       controllers: [UsersController],
       providers: [UsersService],
     }).compile();
