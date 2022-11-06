@@ -97,31 +97,11 @@ jobs:
       - run: npm run build --if-present
       - run: npm run migration:run
         env:
-          DB_HOST: ${DB_HOST}
-          DB_PORT: ${DB_PORT}
-          DB_PASSWORD: ${DB_PASSWORD}
-          DB_NAME: ${DB_NAME}
-          DB_USERNAME: ${DB_USERNAME}
-          JWT_SECRET: ${JWT_SECRET}
+          DB_HOST: ${{ env.DB_HOST }}
+          DB_PORT: ${{ env.DB_PORT }}
+          DB_PASSWORD: ${{ env.DB_PASSWORD }}
+          DB_NAME: ${{ env.DB_NAME }}
+          DB_USERNAME: ${{ env.DB_USERNAME }}
+          JWT_SECRET: ${{ env.JWT_SECRET }}
       - run: npm run test:cov
-        env:
-          # The hostname used to communicate with the PostgreSQL service container
-          DB_HOST: localhost
-          # The default PostgreSQL port
-          DB_PORT: 5432
-          DB_PASSWORD: postgres
-          DB_NAME: postgres
-          DB_USERNAME: postgres
-          JWT_SECRET: secret
-          MONGO_URL: mongodb://127.0.0.1:27017/nest_base?readPreference=primary
       - run: npm run test:e2e
-        env:
-          # The hostname used to communicate with the PostgreSQL service container
-          DB_HOST: localhost
-          # The default PostgreSQL port
-          DB_PORT: 5432
-          DB_PASSWORD: postgres
-          DB_NAME: postgres
-          DB_USERNAME: postgres
-          JWT_SECRET: secret
-          MONGO_URL: mongodb://127.0.0.1:27017/nest_base?readPreference=primary
