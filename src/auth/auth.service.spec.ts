@@ -14,7 +14,7 @@ import { configBaseModules, postgresConfig } from '../app.module';
 import {
   CREDENTIALS_INVALID_EMAIL,
   CREDENTIALS_INVALID_PASSWORD,
-} from './messages';
+} from './auth.messages';
 
 import { generateUser, generatePassword } from '../../test/fixtures';
 
