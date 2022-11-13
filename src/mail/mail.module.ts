@@ -9,7 +9,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { BullModule } from '@nestjs/bull';
 import { emailQueueName } from './mail.constants';
 import { MailProcessor } from './mail.processor';
-import {MailConsumer} from "./mail.consumer";
+import { MailConsumer } from './mail.consumer';
 
 // console.log(process.env.MAIL_HOST)
 

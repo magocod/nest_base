@@ -5,7 +5,7 @@ import { SentMessageInfo } from 'nodemailer';
 export const emailQueueName = 'email';
 
 export enum EmailJobNames {
-  basic = 'basic'
+  basic = 'basic',
 }
 
 export interface EmailJobData {
