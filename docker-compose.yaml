@@ -22,3 +22,11 @@ services:
       MONGODB_DATABASE: nest_base
     volumes:
       - ./mongo:/data/db
+
+  redis:
+    image: redis:7.0
+    restart: always
+    volumes:
+      - ./redis:/data
+    ports:
+      - "6379:6379"

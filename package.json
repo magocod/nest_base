@@ -29,8 +29,8 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:open:handles": "jest --detectOpenHandles",
-    "test:e2e": "jest --detectOpenHandles --config ./test/jest-e2e.json",
+    "test:open:handles": "jest",
+    "test:e2e": "jest --config ./test/jest-e2e.json",
     "prepare": "husky install"
   },
   "dependencies": {
