@@ -1,14 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { MailerService } from '@nestjs-modules/mailer';
+import { SentMessageInfo } from 'nodemailer';
 
 @Injectable()
 export class MailService {
   constructor(private mailerService: MailerService) {}
 
-  async example(email: string) {
+  example(email: string): Promise<SentMessageInfo> {
     const url = `example.com/auth/confirm?token=abc`;
 
-    await this.mailerService.sendMail({
+    return this.mailerService.sendMail({
       to: email,
       // from: '"Support Team" <support@example.com>', // override default from
       subject: 'Example',
@@ -16,10 +17,10 @@ export class MailService {
     });
   }
 
-  async exampleTemplate(email: string) {
+  exampleTemplate(email: string): Promise<SentMessageInfo> {
     const url = `http://example.com/auth/confirm?token=abc`;
 
-    await this.mailerService.sendMail({
+    return this.mailerService.sendMail({
       to: email,
       // from: '"Support Team" <support@example.com>', // override default from
       subject: 'Example',
