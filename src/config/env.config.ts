@@ -15,6 +15,9 @@ export const EnvConfiguration = () => ({
   MAIL_PASSWORD: process.env.MAIL_PASSWORD,
   MAIL_FROM: process.env.MAIL_FROM,
   MAIL_PORT: process.env.MAIL_PORT,
+  REDIS_HOST: process.env.REDIS_HOST,
+  REDIS_PORT: process.env.REDIS_PORT,
+  REDIS_PASSWORD: process.env.REDIS_PASSWORD,
 });
 
 const config = EnvConfiguration();
