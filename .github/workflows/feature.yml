@@ -28,6 +28,7 @@ env:
   DB_USERNAME: postgres
   JWT_SECRET: secret
   MONGO_URL: mongodb://127.0.0.1:27017/nest_base?readPreference=primary
+  MONGODB_DATABASE: nest_base
   MAIL_HOST: smtp.mailtrap.io
   MAIL_USER: user
   MAIL_PASSWORD: 123
