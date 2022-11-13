@@ -10,7 +10,9 @@ import {
 import { CatsService } from './cats.service';
 import { CreateCatDto, UpdateCatDto } from './dto';
 import { PaginationMongoDto } from '../common/dtos/pagination.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Cats')
 @Controller('cats')
 export class CatsController {
   constructor(private readonly catsService: CatsService) {}

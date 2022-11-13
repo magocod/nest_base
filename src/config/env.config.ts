@@ -10,6 +10,11 @@ export const EnvConfiguration = () => ({
   HOST_API: process.env.HOST_API,
   JWT_SECRET: process.env.JWT_SECRET,
   MONGO_URL: process.env.MONGO_URL,
+  MAIL_HOST: process.env.MAIL_HOST,
+  MAIL_USER: process.env.MAIL_USER,
+  MAIL_PASSWORD: process.env.MAIL_PASSWORD,
+  MAIL_FROM: process.env.MAIL_FROM,
+  MAIL_PORT: process.env.MAIL_PORT,
 });
 
 const config = EnvConfiguration();

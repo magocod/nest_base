@@ -1,8 +1,7 @@
 version: '3'
 
-
 services:
-  db:
+  postgres:
     image: postgres:14.3
     restart: always
     ports:
@@ -13,3 +12,13 @@ services:
     container_name: postgres_14
     volumes:
       - ./postgres:/var/lib/postgresql/data
+
+  mongodb:
+    image: mongo:5
+    restart: always
+    ports:
+      - 27017:27017
+    environment:
+      MONGODB_DATABASE: nest-pokemon
+    volumes:
+      - ./mongo:/data/db

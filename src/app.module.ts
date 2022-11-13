@@ -13,6 +13,7 @@ import { EnvConfiguration } from './config/env.config';
 
 // import { UserCreate1664658587799 } from './migration/1664658587799-UserCreate';
 import { CatsModule } from './cats/cats.module';
+import { MailModule } from './mail/mail.module';
 
 export const globalPrefix = 'api';
 
@@ -103,7 +104,7 @@ export function configApp(app: INestApplication) {
 }
 
 @Module({
-  imports: [...configBaseModules(), AuthModule, CatsModule],
+  imports: [...configBaseModules(), AuthModule, CatsModule, MailModule],
   controllers: [AppController],
   providers: [AppService],
 })
