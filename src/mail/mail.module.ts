@@ -15,7 +15,8 @@ import { MailConsumer } from './mail.consumer';
 
 export const mailerAsyncOptions = {
   imports: [ConfigModule],
-  useFactory: async (config: ConfigService) => {
+  inject: [ConfigService],
+  useFactory: (config: ConfigService) => {
     // console.log(process.env.MAIL_HOST);
     // console.log('d', config.get('MAIL_HOST'));
     return {
@@ -42,7 +43,6 @@ export const mailerAsyncOptions = {
       },
     };
   },
-  inject: [ConfigService],
 };
 
 export const mailQueueConfig = [
@@ -82,5 +82,6 @@ export const mailQueueConfig = [
   ],
   controllers: [MailController],
   providers: [MailService, MailProcessor, MailConsumer],
+  exports: [MailService, BullModule],
 })
 export class MailModule {}

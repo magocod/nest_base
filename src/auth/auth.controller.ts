@@ -15,7 +15,7 @@ import { IncomingHttpHeaders } from 'http';
 import { AuthService } from './auth.service';
 import { Auth, GetUser, PermissionProtected, RawHeaders } from './decorators';
 
-import { CreateUserDto, LoginUserDto } from './dto';
+import {CreateUserDto, LoginUserDto, RecoveryPasswordDto} from './dto';
 import { User } from './entities/user.entity';
 
 import { UserPermissionGuard } from './guards';
@@ -81,5 +81,10 @@ export class AuthController {
       ok: true,
       user,
     };
+  }
+
+  @Post('email_recovery_password')
+  sendEmailRecoverPassword(@Body() recoveryPasswordDto: RecoveryPasswordDto) {
+    return this.authService.sendEmailRecoverPassword(recoveryPasswordDto);
   }
 }

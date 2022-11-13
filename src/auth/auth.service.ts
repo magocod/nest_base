@@ -11,12 +11,19 @@ import { Repository, DataSource } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 
 import { User } from './entities/user.entity';
-import { LoginUserDto, CreateUserDto } from './dto';
+import { LoginUserDto, CreateUserDto, RecoveryPasswordDto } from './dto';
 import { JwtPayload } from './interfaces/jwt-payload.interface';
 import {
   CREDENTIALS_INVALID_EMAIL,
   CREDENTIALS_INVALID_PASSWORD,
 } from './auth.messages';
+import { InjectQueue } from '@nestjs/bull';
+import {
+  EmailJob,
+  EmailJobNames,
+  EmailQueue,
+  emailQueueName,
+} from '../mail/mail.constants';
 
 @Injectable()
 export class AuthService {
@@ -25,6 +32,7 @@ export class AuthService {
     private readonly userRepository: Repository<User>,
     private readonly jwtService: JwtService,
     private readonly dataSource: DataSource,
+    @InjectQueue(emailQueueName) private readonly emailQueue: EmailQueue,
   ) {}
 
   async create(createUserDto: CreateUserDto) {
@@ -87,5 +95,17 @@ export class AuthService {
   // for testing
   getDataSource(): DataSource {
     return this.dataSource;
+  }
+
+  sendEmailRecoverPassword(data: RecoveryPasswordDto): Promise<EmailJob> {
+    const url = `http://example.com/auth/confirm?token=abc`;
+    return this.emailQueue.add(EmailJobNames.basic, {
+      log: true,
+      options: {
+        to: [data.email],
+        subject: 'Recovery password',
+        html: `<b>Recovery password</b> <br> <b>url: ${url}</b>`,
+      },
+    });
   }
 }
