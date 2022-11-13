@@ -19,8 +19,8 @@ describe('MailController', () => {
   });
 
   afterEach(async () => {
-    await module.close()
-  })
+    await module.close();
+  });
 
   it('should be defined', () => {
     expect(controller).toBeDefined();
