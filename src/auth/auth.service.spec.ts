@@ -17,7 +17,6 @@ import {
 } from './auth.messages';
 
 import { generateUser, generatePassword } from '../../test/fixtures';
-import {mailQueueConfig} from "../mail/mail.module";
 
 describe('AuthService', () => {
   let service: AuthService;
