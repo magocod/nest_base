@@ -16,4 +16,17 @@ export class MailController {
   exampleTemplate() {
     return this.mailService.exampleTemplate('example_template@yopmail.com');
   }
+
+  @Post('queue')
+  exampleQueue() {
+    const url = `http://example.com/auth/confirm?token=abc`;
+    return this.mailService.sendEmailQueue({
+      log: true,
+      options: {
+        to: ['example_queue@yopmail.com'],
+        subject: 'Queue',
+        html: `<b>Queue</b> <br> <b>url: ${url}</b>`,
+      },
+    });
+  }
 }

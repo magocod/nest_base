@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { MailController } from './mail.controller';
 import { MailService } from './mail.service';
 import { MailerModule } from '@nestjs-modules/mailer';
-import { mailerAsyncOptions } from './mail.module';
+import { mailerAsyncOptions, mailQueueConfig } from './mail.module';
 
 describe('MailController', () => {
   let controller: MailController;
@@ -10,14 +10,17 @@ describe('MailController', () => {
 
   beforeEach(async () => {
     module = await Test.createTestingModule({
-      imports: [MailerModule.forRootAsync(mailerAsyncOptions)],
+      imports: [
+        MailerModule.forRootAsync(mailerAsyncOptions),
+        ...mailQueueConfig,
+      ],
       controllers: [MailController],
       providers: [MailService],
     }).compile();
 
     controller = module.get<MailController>(MailController);
   });
-
+  1;
   afterEach(async () => {
     await module.close();
   });

@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { MailService } from './mail.service';
 import { MailerModule } from '@nestjs-modules/mailer';
-import { mailerAsyncOptions } from './mail.module';
+import { mailerAsyncOptions, mailQueueConfig } from './mail.module';
 
 describe('MailService', () => {
   let service: MailService;
@@ -9,7 +9,10 @@ describe('MailService', () => {
 
   beforeEach(async () => {
     module = await Test.createTestingModule({
-      imports: [MailerModule.forRootAsync(mailerAsyncOptions)],
+      imports: [
+        MailerModule.forRootAsync(mailerAsyncOptions),
+        ...mailQueueConfig,
+      ],
       providers: [MailService],
     }).compile();
 

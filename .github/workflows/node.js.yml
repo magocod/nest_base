@@ -10,6 +10,7 @@ on:
     branches: ['main']
 
 env:
+  LOG_HTTP_REQUEST: false
   # The hostname used to communicate with the PostgreSQL service container
   DB_HOST: localhost
   # The default PostgreSQL port
@@ -19,6 +20,15 @@ env:
   DB_USERNAME: postgres
   JWT_SECRET: secret
   MONGO_URL: mongodb://127.0.0.1:27017/nest_base?readPreference=primary
+  MONGODB_DATABASE: nest_base
+  MAIL_HOST: smtp.mailtrap.io
+  MAIL_USER: user
+  MAIL_PASSWORD: 123
+  MAIL_FROM: noreply@mailtrap.io
+  MAIL_PORT: 2525
+  REDIS_HOST: localhost
+  REDIS_PORT: 6379
+  REDIS_PASSWORD: 123
 
 jobs:
   lint:
@@ -76,6 +86,20 @@ jobs:
           --name mongo_container
         ports:
           - 27017:27017
+
+      # Label used to access the service container
+      redis:
+        # Docker Hub image
+        image: redis:7.0
+        # Set health checks to wait until redis has started
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          # Maps port 6379 on service container to the host
+          - 6379:6379
 
     steps:
       - uses: actions/checkout@v3

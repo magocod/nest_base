@@ -6,6 +6,10 @@ import { MailerModule } from '@nestjs-modules/mailer';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { join } from 'path';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { BullModule } from '@nestjs/bull';
+import { emailQueueName } from './mail.constants';
+import { MailProcessor } from './mail.processor';
+import {MailConsumer} from "./mail.consumer";
 
 // console.log(process.env.MAIL_HOST)
 
@@ -41,6 +45,12 @@ export const mailerAsyncOptions = {
   inject: [ConfigService],
 };
 
+export const mailQueueConfig = [
+  BullModule.registerQueue({
+    name: emailQueueName,
+  }),
+];
+
 @Module({
   imports: [
     ConfigModule,
@@ -68,8 +78,9 @@ export const mailerAsyncOptions = {
     //   },
     // }),
     MailerModule.forRootAsync(mailerAsyncOptions),
+    ...mailQueueConfig,
   ],
   controllers: [MailController],
-  providers: [MailService],
+  providers: [MailService, MailProcessor, MailConsumer],
 })
 export class MailModule {}
