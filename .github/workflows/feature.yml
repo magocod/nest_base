@@ -18,6 +18,7 @@ on:
       - '!main' # excludes master, main
 
 env:
+  LOG_HTTP_REQUEST: false
   # The hostname used to communicate with the PostgreSQL service container
   DB_HOST: localhost
   # The default PostgreSQL port
@@ -27,6 +28,14 @@ env:
   DB_USERNAME: postgres
   JWT_SECRET: secret
   MONGO_URL: mongodb://127.0.0.1:27017/nest_base?readPreference=primary
+  MAIL_HOST: smtp.mailtrap.io
+  MAIL_USER: user
+  MAIL_PASSWORD: 123
+  MAIL_FROM: noreply@mailtrap.io
+  MAIL_PORT: 2525
+  REDIS_HOST: localhost
+  REDIS_PORT: 6379
+  REDIS_PASSWORD: 123
 
 jobs:
   lint:
