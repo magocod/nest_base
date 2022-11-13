@@ -12,7 +12,7 @@ import { CreateUserDto, LoginUserDto } from './../../src/auth/dto';
 import {
   CREDENTIALS_INVALID_EMAIL,
   CREDENTIALS_INVALID_PASSWORD,
-} from '../../src/auth/messages';
+} from '../../src/auth/auth.messages';
 
 import {
   generateUser,

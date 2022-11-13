@@ -16,7 +16,7 @@ import { JwtPayload } from './interfaces/jwt-payload.interface';
 import {
   CREDENTIALS_INVALID_EMAIL,
   CREDENTIALS_INVALID_PASSWORD,
-} from './messages';
+} from './auth.messages';
 
 @Injectable()
 export class AuthService {

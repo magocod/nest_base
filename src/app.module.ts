@@ -13,10 +13,13 @@ import { EnvConfiguration } from './config/env.config';
 
 // import { UserCreate1664658587799 } from './migration/1664658587799-UserCreate';
 import { CatsModule } from './cats/cats.module';
+import { MailModule } from './mail/mail.module';
+import { AudioModule } from './audio/audio.module';
 
 export const globalPrefix = 'api';
 
 import './data-source';
+import { BullModule } from '@nestjs/bull';
 
 // export function configBaseModules() {
 //   return [
@@ -62,6 +65,18 @@ export function configBaseModules(config = commonConfig) {
     ConfigModule.forRoot({
       load: [EnvConfiguration],
     }),
+    BullModule.forRoot({
+      redis: {
+        host: process.env.REDIS_HOST,
+        port: +process.env.REDIS_PORT,
+        maxRetriesPerRequest: 2,
+        // password: process.env.REDIS_PASSWORD
+      },
+      // limiter: {
+      //   max: 1,
+      //   duration: 8000,
+      // },
+    }),
   ];
 
   if (config.postgres) {
@@ -103,7 +118,13 @@ export function configApp(app: INestApplication) {
 }
 
 @Module({
-  imports: [...configBaseModules(), AuthModule, CatsModule],
+  imports: [
+    ...configBaseModules(),
+    AuthModule,
+    CatsModule,
+    MailModule,
+    AudioModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

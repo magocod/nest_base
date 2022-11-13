@@ -10,7 +10,7 @@ import {
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
-import { PASSWORD_PATTERN } from '../constants';
+import { PASSWORD_PATTERN } from '../auth.constants';
 
 // public registration
 export class CreateUserDto {
