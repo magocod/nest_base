@@ -1,8 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
-import { AppModule, configApp } from './../src/app.module';
+import { AppModule, configApp, globalPrefix } from './../src/app.module';
 import { ApiRouteVersion } from '../src/app.constants';
+
+const baseRoute = `/${globalPrefix}/${ApiRouteVersion.v1}/`;
 
 describe('AppController (e2e)', () => {
   let app: INestApplication;
@@ -21,14 +23,9 @@ describe('AppController (e2e)', () => {
     await app.close();
   });
 
-  it('/ (GET)', () => {
-    return request(app.getHttpServer()).get('/').expect(200);
-    // .expect('Hello World!');
-  });
-
   it('/v1 (GET)', () => {
     return request(app.getHttpServer())
-      .get(`/${ApiRouteVersion.v1}`)
+      .get(baseRoute)
       .expect(200)
       .expect('Hello World!');
   });
