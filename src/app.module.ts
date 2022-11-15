@@ -1,4 +1,9 @@
-import {Module, ValidationPipe, INestApplication, VersioningType} from '@nestjs/common';
+import {
+  Module,
+  ValidationPipe,
+  INestApplication,
+  VersioningType,
+} from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { MongooseModule } from '@nestjs/mongoose';
