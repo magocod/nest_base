@@ -1,9 +1,10 @@
 import { Controller, Post } from '@nestjs/common';
 import { MailService } from './mail.service';
 import { ApiTags } from '@nestjs/swagger';
+import { ApiVersion } from '../app.constants';
 
 @ApiTags('Mail')
-@Controller('mail')
+@Controller({ path: 'mail', version: ApiVersion.v1 })
 export class MailController {
   constructor(private readonly mailService: MailService) {}
 

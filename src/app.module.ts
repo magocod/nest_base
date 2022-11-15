@@ -1,4 +1,4 @@
-import { Module, ValidationPipe, INestApplication } from '@nestjs/common';
+import {Module, ValidationPipe, INestApplication, VersioningType} from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -115,6 +115,10 @@ export function configApp(app: INestApplication) {
       forbidNonWhitelisted: true,
     }),
   );
+
+  app.enableVersioning({
+    type: VersioningType.URI,
+  });
 }
 
 @Module({

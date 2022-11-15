@@ -10,9 +10,9 @@ import { Repository, DataSource } from 'typeorm';
 
 import * as bcrypt from 'bcrypt';
 
-import { User } from './entities/user.entity';
+import { User } from './entities';
 import { LoginUserDto, CreateUserDto, RecoveryPasswordDto } from './dto';
-import { JwtPayload } from './interfaces/jwt-payload.interface';
+import { JwtPayload } from './interfaces';
 import {
   CREDENTIALS_INVALID_EMAIL,
   CREDENTIALS_INVALID_PASSWORD,

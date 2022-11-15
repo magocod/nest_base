@@ -11,12 +11,13 @@ import {
 import { ApiTags } from '@nestjs/swagger';
 import { PermissionsService } from './permissions.service';
 import { CreatePermissionDto, UpdatePermissionDto } from './dto';
-import { SimplePaginationDto } from '../common/dtos/pagination.dto';
+import { SimplePaginationDto } from '../common/dtos';
 import { Auth } from './decorators';
 import { PermissionNames } from './interfaces';
+import { ApiVersion } from '../app.constants';
 
 @ApiTags('Auth_permissions')
-@Controller('permissions')
+@Controller({ path: 'permissions', version: ApiVersion.v1 })
 export class PermissionsController {
   constructor(private readonly permissionsService: PermissionsService) {}
 

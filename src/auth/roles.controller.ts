@@ -11,12 +11,13 @@ import {
 import { ApiTags } from '@nestjs/swagger';
 import { RolesService } from './roles.service';
 import { CreateRoleDto, UpdateRoleDto } from './dto';
-import { SimplePaginationDto } from '../common/dtos/pagination.dto';
+import { SimplePaginationDto } from '../common/dtos';
 import { Auth } from './decorators';
 import { PermissionNames } from './interfaces';
+import { ApiVersion } from '../app.constants';
 
 @ApiTags('Auth_roles')
-@Controller('roles')
+@Controller({ path: 'roles', version: ApiVersion.v1 })
 export class RolesController {
   constructor(private readonly rolesService: RolesService) {}
 

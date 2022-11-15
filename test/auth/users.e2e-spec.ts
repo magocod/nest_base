@@ -34,8 +34,9 @@ import {
   DEFAULT_LIMIT_PAGINATION,
   PaginationKeys,
 } from '../../src/common/utils';
+import { ApiRouteVersion } from '../../src/app.constants';
 
-const baseRoute = `/${globalPrefix}/users`;
+const baseRoute = `/${globalPrefix}/${ApiRouteVersion.v1}/users`;
 
 describe('Users - /users (e2e)', () => {
   let app: INestApplication;

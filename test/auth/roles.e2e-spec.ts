@@ -17,7 +17,7 @@ import {
   generateUserWith,
 } from '../fixtures';
 import { Permission, Role } from '../../src/auth/entities';
-import { SimplePaginationDto } from '../../src/common/dtos/pagination.dto';
+import { SimplePaginationDto } from '../../src/common/dtos';
 import {
   DEFAULT_LIMIT_PAGINATION,
   PaginationKeys,
@@ -30,8 +30,9 @@ import {
   QueryString,
 } from '../helpers';
 import { PermissionNames } from '../../src/auth/interfaces';
+import { ApiRouteVersion } from '../../src/app.constants';
 
-const baseRoute = `/${globalPrefix}/roles`;
+const baseRoute = `/${globalPrefix}/${ApiRouteVersion.v1}/roles`;
 
 describe('Roles - /roles (e2e)', () => {
   let app: INestApplication;

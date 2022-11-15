@@ -1,7 +1,7 @@
 import helmet from 'helmet';
 
 import { NestFactory } from '@nestjs/core';
-import { Logger } from '@nestjs/common';
+import {Logger, VersioningType} from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 import { AppModule, configApp } from './app.module';
@@ -34,6 +34,7 @@ async function bootstrap() {
   }
 
   await app.listen(process.env.PORT);
-  logger.log(`App running on port ${process.env.PORT}`);
+  logger.log(`App running on ${process.env.HOST_API}`);
 }
-bootstrap();
+
+void bootstrap();

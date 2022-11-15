@@ -5,9 +5,10 @@ import { InjectQueue } from '@nestjs/bull';
 import { ApiTags } from '@nestjs/swagger';
 import { AudioQueue, audioQueueName, AudioJobNames } from './audio.constants';
 import { AudioTranscodeDto } from './dto';
+import { ApiVersion } from '../app.constants';
 
 @ApiTags('Audio')
-@Controller('audio')
+@Controller({ path: 'audio', version: ApiVersion.v1 })
 export class AudioController {
   constructor(
     private readonly audioService: AudioService,

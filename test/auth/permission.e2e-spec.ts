@@ -27,8 +27,9 @@ import {
 } from '../helpers';
 import { PermissionNames } from '../../src/auth/interfaces';
 import { Permission } from '../../src/auth/entities';
+import { ApiRouteVersion } from '../../src/app.constants';
 
-const baseRoute = `/${globalPrefix}/permissions`;
+const baseRoute = `/${globalPrefix}/${ApiRouteVersion.v1}/permissions`;
 
 describe('Permissions - /permissions (e2e)', () => {
   let app: INestApplication;
