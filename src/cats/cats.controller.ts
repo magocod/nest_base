@@ -6,12 +6,14 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
+  Version,
 } from '@nestjs/common';
 import { CatsService } from './cats.service';
-import { CreateCatDto, UpdateCatDto } from './dto';
-import { PaginationMongoDto } from '../common/dtos/pagination.dto';
+import { CreateCatDto, PaginationCatDto, UpdateCatDto } from './dto';
 import { ApiTags } from '@nestjs/swagger';
 import { ApiVersion } from '../app.constants';
+import { PaginationMongoDto } from '../common/dtos';
 
 @ApiTags('Cats')
 @Controller({ path: 'cats', version: ApiVersion.v1 })
@@ -24,8 +26,14 @@ export class CatsController {
   }
 
   @Get()
-  findAll(paginationDto: PaginationMongoDto) {
+  findAll(@Query() paginationDto: PaginationMongoDto) {
     return this.catsService.findAll(paginationDto);
+  }
+
+  @Version(ApiVersion.v2)
+  @Get()
+  findAllAggregate(@Query() paginationDto: PaginationCatDto) {
+    return this.catsService.findAllAggregate(paginationDto);
   }
 
   @Get(':id')

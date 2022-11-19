@@ -87,6 +87,7 @@ export class AuthService {
     return token;
   }
 
+  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
   private handleDBErrors(error: any): never {
     if (error.code === '23505') throw new BadRequestException(error.detail);
     throw new InternalServerErrorException('Please check server logs');
