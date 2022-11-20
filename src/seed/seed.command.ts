@@ -10,7 +10,7 @@ export class SeedRunner extends CommandRunner {
   constructor(private readonly seedService: SeedService) {
     super();
   }
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
   async run(inputs: string[], options: Record<string, any>): Promise<void> {
     console.log('call seed');
     const result = await this.seedService.seed();

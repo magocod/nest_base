@@ -23,8 +23,9 @@ import {
 } from '../fixtures';
 import { Permission } from '../../src/auth/entities';
 import { PermissionNames } from '../../src/auth/interfaces';
+import { ApiRouteVersion } from '../../src/app.constants';
 
-const baseRoute = `/${globalPrefix}/auth`;
+const baseRoute = `/${globalPrefix}/${ApiRouteVersion.v1}/auth`;
 const routeRegister = `${baseRoute}/register`;
 const routeLogin = `${baseRoute}/login`;
 const routeCheckStatus = `${baseRoute}/check-status`;

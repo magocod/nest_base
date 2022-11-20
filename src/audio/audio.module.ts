@@ -16,5 +16,6 @@ export const audioQueueConfig = [
   imports: [...audioQueueConfig],
   controllers: [AudioController],
   providers: [AudioService, AudioProcessor, AudioConsumer],
+  exports: [BullModule, AudioService],
 })
 export class AudioModule {}

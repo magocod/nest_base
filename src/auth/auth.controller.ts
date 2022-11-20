@@ -15,14 +15,15 @@ import { IncomingHttpHeaders } from 'http';
 import { AuthService } from './auth.service';
 import { Auth, GetUser, PermissionProtected, RawHeaders } from './decorators';
 
-import { CreateUserDto, LoginUserDto } from './dto';
-import { User } from './entities/user.entity';
+import { CreateUserDto, LoginUserDto, RecoveryPasswordDto } from './dto';
+import { User } from './entities';
 
 import { UserPermissionGuard } from './guards';
 import { PermissionNames } from './interfaces';
+import { ApiVersion } from '../app.constants';
 
 @ApiTags('Auth')
-@Controller('auth')
+@Controller({ path: 'auth', version: ApiVersion.v1 })
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
@@ -81,5 +82,10 @@ export class AuthController {
       ok: true,
       user,
     };
+  }
+
+  @Post('email_recovery_password')
+  sendEmailRecoverPassword(@Body() recoveryPasswordDto: RecoveryPasswordDto) {
+    return this.authService.sendEmailRecoverPassword(recoveryPasswordDto);
   }
 }

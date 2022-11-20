@@ -5,6 +5,7 @@ import {
   IsInt,
   IsOptional,
   IsBoolean,
+  IsMongoId,
 } from 'class-validator';
 
 export class CreateCatDto {
@@ -27,4 +28,9 @@ export class CreateCatDto {
   @IsBoolean()
   @IsOptional()
   isActive?: boolean;
+
+  @ApiProperty()
+  @IsMongoId()
+  @IsOptional()
+  owner?: string;
 }

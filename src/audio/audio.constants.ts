@@ -1,5 +1,8 @@
 import { Job, Queue } from 'bull';
 
+// urls
+export const audioTranscodeUrl = 'audio/transcode';
+
 export const audioQueueName = 'audio';
 
 export enum AudioJobNames {
@@ -11,7 +14,7 @@ export interface AudioJobData {
   log: boolean;
 }
 
-export type AudioJobResult = number;
+export type AudioJobResult = string;
 
 export type AudioJob = Job<AudioJobData>;
 

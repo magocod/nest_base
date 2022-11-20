@@ -14,6 +14,7 @@ import { JwtStrategy } from './strategies/jwt.strategy';
 import { Permission, Role, User } from './entities';
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
+import { MailModule } from '../mail/mail.module';
 
 @Module({
   imports: [
@@ -38,6 +39,8 @@ import { UsersService } from './users.service';
     //   expiresIn:'2h'
     // }
     // })
+    MailModule,
+    // ...mailQueueConfig, // not required
   ],
   controllers: [
     AuthController,
@@ -58,6 +61,8 @@ import { UsersService } from './users.service';
     PassportModule,
     JwtModule,
     UsersService,
+    MailModule,
+    // BullModule, // not required
   ],
 })
 export class AuthModule {}
