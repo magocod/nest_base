@@ -20,7 +20,7 @@ describe('MailController', () => {
 
     controller = module.get<MailController>(MailController);
   });
-  1;
+
   afterEach(async () => {
     await module.close();
   });

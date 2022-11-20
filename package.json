@@ -30,7 +30,15 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:open:handles": "jest",
+    "test:auth": "jest --testPathPattern \"./src/auth/\"",
+    "test:auth:band": "jest --testPathPattern \"./src/auth/\" --runInBand",
+    "test:cats": "jest --testPathPattern \"./src/cats/\"",
+    "test:mail": "jest --testPathPattern \"./src/mail/\"",
+    "test:mail:band": "jest --testPathPattern \"./src/mail/\" --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
+    "test:e2e:base": "jest --config ./test/jest-e2e.json --runTestsByPath \"./test/app.e2e-spec.ts\"",
+    "test:e2e:auth": "jest --config ./test/jest-e2e.json --testPathPattern \"./test/auth\"",
+    "test:e2e:audio": "jest --config ./test/jest-e2e.json --testPathPattern \"./test/audio\"",
     "prepare": "husky install"
   },
   "dependencies": {

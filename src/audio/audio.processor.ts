@@ -13,6 +13,7 @@ export class AudioProcessor {
 
   @Process(AudioJobNames.transcode)
   handleTranscode(job: AudioJob): AudioJobResult {
+    // console.log('call AudioProcessor');
     const t = 'transcode:' + job.data.file;
     if (job.data.log) {
       this.logger.debug('Start transcoding...');

@@ -43,75 +43,73 @@ describe('MailService', () => {
     await module.close();
   });
 
-  describe('example', function () {
-    it('email sent', async () => {
-      const spy = jest
-        .spyOn(mailerService, 'sendMail')
-        .mockImplementation((args) => {
-          return Promise.resolve(fakeEmail(args));
-        });
-      const email = faker.internet.email();
-      const v = await service.example(email);
-      // console.log('result a', v);
-
-      expect(mailerService.sendMail).toBeCalledTimes(1);
-      expect(v.accepted.includes(email)).toEqual(true);
-      spy.mockRestore();
-    });
-
-    it('email sent, mock method', async () => {
-      const spy = jest
-        .spyOn(mailerService, 'sendMail')
-        .mockImplementation((args) => {
-          return Promise.resolve(fakeEmail(args));
-        });
-
-      const email = faker.internet.email();
-      const v = await service.example(email);
-      // console.log('result b', v);
-
-      expect(mailerService.sendMail).toBeCalledTimes(1);
-      expect(v.accepted.includes(email)).toEqual(true);
-      spy.mockRestore();
-    });
-
-    it('exception', async () => {
-      const spy = jest
-        .spyOn(mailerService, 'sendMail')
-        .mockImplementation((args) => {
-          return Promise.resolve(fakeEmailException(args));
-        });
-      try {
-        await service.example(faker.internet.email());
-      } catch (e) {
-        // console.log(e);
-        // console.log(e.message);
-        // console.log(e.code);
-        expect(mailerService.sendMail).toBeCalledTimes(1);
-        expect(e.code).toEqual('ESOCKET');
-        // expect(e instanceof Error).toEqual(true);
-      } finally {
-        spy.mockRestore();
-      }
-    });
-
-    it('queue', async () => {
-      const spy = jest.spyOn(queue, 'add').mockImplementation((name, data) => {
-        // console.log(data)
-        return Promise.resolve(
-          fakeJobJson(name as string, data),
-        ) as unknown as Promise<Job>;
+  it('email sent', async () => {
+    const spy = jest
+      .spyOn(mailerService, 'sendMail')
+      .mockImplementation((args) => {
+        return Promise.resolve(fakeEmail(args));
       });
-      const email = faker.internet.email();
-      const v = await service.sendEmailQueue({
-        log: false,
-        options: { to: email },
-      });
-      // console.log('result c', v);
+    const email = faker.internet.email();
+    const v = await service.example(email);
+    // console.log('result a', v);
 
-      expect(v.id).toBeDefined();
-      expect(queue.add).toBeCalledTimes(1);
+    expect(mailerService.sendMail).toBeCalledTimes(1);
+    expect(v.accepted.includes(email)).toEqual(true);
+    spy.mockRestore();
+  });
+
+  it('email sent, mock method', async () => {
+    const spy = jest
+      .spyOn(mailerService, 'sendMail')
+      .mockImplementation((args) => {
+        return Promise.resolve(fakeEmail(args));
+      });
+
+    const email = faker.internet.email();
+    const v = await service.example(email);
+    // console.log('result b', v);
+
+    expect(mailerService.sendMail).toBeCalledTimes(1);
+    expect(v.accepted.includes(email)).toEqual(true);
+    spy.mockRestore();
+  });
+
+  it('exception', async () => {
+    const spy = jest
+      .spyOn(mailerService, 'sendMail')
+      .mockImplementation((args) => {
+        return Promise.resolve(fakeEmailException(args));
+      });
+    try {
+      await service.example(faker.internet.email());
+    } catch (e) {
+      // console.log(e);
+      // console.log(e.message);
+      // console.log(e.code);
+      expect(mailerService.sendMail).toBeCalledTimes(1);
+      expect(e.code).toEqual('ESOCKET');
+      // expect(e instanceof Error).toEqual(true);
+    } finally {
       spy.mockRestore();
+    }
+  });
+
+  it('queue', async () => {
+    const spy = jest.spyOn(queue, 'add').mockImplementation((name, data) => {
+      // console.log(data)
+      return Promise.resolve(
+        fakeJobJson(name as string, data),
+      ) as unknown as Promise<Job>;
     });
+    const email = faker.internet.email();
+    const v = await service.sendEmailQueue({
+      log: false,
+      options: { to: email },
+    });
+    // console.log('result c', v);
+
+    expect(v.id).toBeDefined();
+    expect(queue.add).toBeCalledTimes(1);
+    spy.mockRestore();
   });
 });

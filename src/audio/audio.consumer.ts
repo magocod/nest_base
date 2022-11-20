@@ -8,6 +8,7 @@ export class AudioConsumer {
 
   @OnQueueCompleted()
   handleTranscode(job: AudioJob, result: AudioJobResult) {
+    // console.log('call AudioConsumer');
     if (job.data.log) {
       this.logger.debug('audio OnQueueCompleted');
       // console.log(job);
