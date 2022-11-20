@@ -15,7 +15,7 @@ export class MailProcessor {
   constructor(private mailerService: MailerService) {}
 
   @Process(EmailJobNames.basic)
-  handleSendEmailBasic(job: EmailJob): EmailJobResult {
+  handleSendEmailBasic(job: EmailJob): Promise<EmailJobResult> {
     if (job.data.log) {
       this.logger.debug('start send email...');
     }

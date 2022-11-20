@@ -11,7 +11,7 @@ export interface AudioJobData {
   log: boolean;
 }
 
-export type AudioJobResult = number;
+export type AudioJobResult = string;
 
 export type AudioJob = Job<AudioJobData>;
 

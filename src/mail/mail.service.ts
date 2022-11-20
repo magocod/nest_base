@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { MailerService } from '@nestjs-modules/mailer';
-import { SentMessageInfo } from 'nodemailer';
+// import { SentMessageInfo } from 'nodemailer';
 import { InjectQueue } from '@nestjs/bull';
 import {
   EmailJob,
@@ -9,6 +9,7 @@ import {
   EmailQueue,
   emailQueueName,
 } from './mail.constants';
+import { MessageInfo } from './interfaces';
 
 @Injectable()
 export class MailService {
@@ -17,7 +18,7 @@ export class MailService {
     @InjectQueue(emailQueueName) private readonly emailQueue: EmailQueue,
   ) {}
 
-  example(email: string): Promise<SentMessageInfo> {
+  example(email: string): Promise<MessageInfo> {
     const url = `http://example.com/auth/confirm?token=abc`;
 
     return this.mailerService.sendMail({
@@ -28,7 +29,7 @@ export class MailService {
     });
   }
 
-  exampleTemplate(email: string): Promise<SentMessageInfo> {
+  exampleTemplate(email: string): Promise<MessageInfo> {
     const url = `http://example.com/auth/confirm?token=abc`;
 
     return this.mailerService.sendMail({
@@ -45,6 +46,7 @@ export class MailService {
   }
 
   sendEmailQueue(data: EmailJobData): Promise<EmailJob> {
+    // console.log(this.emailQueue)
     return this.emailQueue.add(EmailJobNames.basic, {
       log: true,
       ...data,

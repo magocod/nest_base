@@ -14,7 +14,7 @@ export class AudioConsumer {
       // console.log(result);
       this.logger.debug(job.name);
       this.logger.debug(job.data);
-      this.logger.debug(result);
+      this.logger.debug('result: ' + result);
       this.logger.debug('audio OnQueueCompleted');
     }
   }

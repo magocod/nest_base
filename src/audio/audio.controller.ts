@@ -16,8 +16,8 @@ export class AudioController {
   ) {}
 
   @Post('transcode')
-  async transcode(@Body() audioTranscodeDto: AudioTranscodeDto) {
-    await this.audioQueue.add(AudioJobNames.transcode, {
+  transcode(@Body() audioTranscodeDto: AudioTranscodeDto) {
+    return this.audioQueue.add(AudioJobNames.transcode, {
       file: 'audio.mp3',
       log: true,
       ...audioTranscodeDto,

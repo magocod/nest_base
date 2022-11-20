@@ -7,7 +7,7 @@ export class MailConsumer {
   private readonly logger = new Logger(MailConsumer.name);
 
   @OnQueueCompleted()
-  handleTranscode(job: EmailJob, result: EmailJobResult) {
+  handleSendEmailBasic(job: EmailJob, result: EmailJobResult) {
     if (job.data.log) {
       this.logger.debug('email OnQueueCompleted');
       // console.log(job);
