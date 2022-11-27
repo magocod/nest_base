@@ -5,7 +5,7 @@ export const JoiValidationSchema = Joi.object<EnvConfig>({
   NODE_ENV: Joi.string().optional(),
   // server
   PORT: Joi.number().default(3000),
-  HOST_API: Joi.string().required(),
+  HOST_API: Joi.string().optional(),
   LOG_HTTP_REQUEST: Joi.boolean().optional(),
   DEFAULT_LIMIT: Joi.number().default(5),
   // postgres
