@@ -23,8 +23,9 @@ import { AudioModule } from './audio/audio.module';
 
 export const globalPrefix = 'api';
 
-import './data-source';
+// import './data-source';
 import { BullModule } from '@nestjs/bull';
+import { JoiValidationSchema } from './config/joi.validation';
 
 // export function configBaseModules() {
 //   return [
@@ -69,6 +70,7 @@ export function configBaseModules(config = commonConfig) {
   const modules = [
     ConfigModule.forRoot({
       load: [EnvConfiguration],
+      validationSchema: JoiValidationSchema,
     }),
     BullModule.forRoot({
       redis: {
