@@ -35,6 +35,7 @@
     "test:cats": "jest --testPathPattern \"./src/cats/\"",
     "test:mail": "jest --testPathPattern \"./src/mail/\"",
     "test:mail:band": "jest --testPathPattern \"./src/mail/\" --runInBand",
+    "test:messages": "jest --testPathPattern \"./src/messages/\"",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "test:e2e:base": "jest --config ./test/jest-e2e.json --runTestsByPath \"./test/app.e2e-spec.ts\"",
     "test:e2e:auth": "jest --config ./test/jest-e2e.json --testPathPattern \"./test/auth\"",

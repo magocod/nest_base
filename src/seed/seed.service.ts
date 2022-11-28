@@ -6,7 +6,7 @@ import {
   RoleNames,
   PermissionNames,
   DefaultEmails,
-} from '../auth/interfaces/permission';
+} from '../auth/interfaces';
 
 @Injectable()
 export class SeedService {

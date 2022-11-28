@@ -26,6 +26,7 @@ export const globalPrefix = 'api';
 // import './data-source';
 import { BullModule } from '@nestjs/bull';
 import { JoiValidationSchema } from './config/joi.validation';
+import { MessagesModule } from './messages/messages.module';
 
 // export function configBaseModules() {
 //   return [
@@ -135,6 +136,7 @@ export function configApp(app: INestApplication) {
     CatsModule,
     MailModule,
     AudioModule,
+    MessagesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
