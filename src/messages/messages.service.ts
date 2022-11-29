@@ -7,7 +7,7 @@ import { ConnectedClients } from './interfaces';
 import { Socket } from 'socket.io';
 import { InjectConnection, InjectModel } from '@nestjs/mongoose';
 import { Connection, Model } from 'mongoose';
-import { Message, MessageDocument } from './entities/message.schema';
+import { Message, MessageDocument } from './entities';
 
 @Injectable()
 export class MessagesService {

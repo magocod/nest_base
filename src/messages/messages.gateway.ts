@@ -10,7 +10,7 @@ import {
 } from '@nestjs/websockets';
 import { MessagesService } from './messages.service';
 import { CreateMessageDto, NewMessageDto, UpdateMessageDto } from './dto';
-import { Server, Socket } from 'socket.io';
+// import { Server, Socket } from 'socket.io';
 import { JwtService } from '@nestjs/jwt';
 import { JwtPayload } from '../auth/interfaces';
 import {
@@ -20,16 +20,17 @@ import {
   // ValidationPipe
 } from '@nestjs/common';
 import { WSValidationPipe } from '../common/pipes';
-import { LoggingInterceptor } from '../common/interceptor';
+import { WsLoggingInterceptor } from '../common/interceptor';
+import { MessageEvents, MessageSocket, MessageWsServer } from './interfaces';
 
 @UsePipes(WSValidationPipe)
 // @UsePipes(new ValidationPipe())
-@UseInterceptors(LoggingInterceptor)
+@UseInterceptors(WsLoggingInterceptor)
 @WebSocketGateway({ cors: true })
 export class MessagesGateway
   implements OnGatewayConnection, OnGatewayDisconnect
 {
-  @WebSocketServer() wss: Server;
+  @WebSocketServer() wss: MessageWsServer;
   private readonly logger = new Logger('WS');
 
   constructor(
@@ -37,7 +38,7 @@ export class MessagesGateway
     private readonly jwtService: JwtService,
   ) {}
 
-  async handleConnection(client: Socket) {
+  async handleConnection(client: MessageSocket) {
     const token = client.handshake.headers.authentication as string;
     let payload: JwtPayload;
 
@@ -58,27 +59,24 @@ export class MessagesGateway
     // console.log('Cliente conectado:', client.id );
     this.logger.debug(`connected ${client.id}`);
 
-    this.wss.emit(
-      'clients-updated',
-      this.messagesService.getConnectedClients(),
-    );
+    this.wss.emit('clientsUpdated', this.messagesService.getConnectedClients());
   }
 
-  handleDisconnect(client: Socket) {
+  handleDisconnect(client: MessageSocket) {
     // console.log('Cliente desconectado', client.id )
     this.messagesService.removeClient(client.id);
 
     this.logger.debug(`disconnect ${client.id}`);
 
     this.wss.emit(
-      'clients-updated',
+      MessageEvents.clientsUpdated,
       this.messagesService.getConnectedClients(),
     );
   }
 
-  @SubscribeMessage('message-from-client')
+  @SubscribeMessage(MessageEvents.messageFromClient)
   onMessageFromClient(
-    @ConnectedSocket() client: Socket,
+    @ConnectedSocket() client: MessageSocket,
     @MessageBody() payload: NewMessageDto,
   ) {
     //! Emite únicamente al cliente.
@@ -93,20 +91,20 @@ export class MessagesGateway
     //   message: payload.message || 'no-message!!'
     // });
 
-    this.wss.emit('message-from-server', {
+    this.wss.emit('messageFromServer', {
       fullName: this.messagesService.getUserFullName(client.id),
       message: payload.message || 'no-message!!',
     });
   }
 
-  @SubscribeMessage('message-from-client-exception')
+  @SubscribeMessage(MessageEvents.messageFromClientException)
   onMessageFromClientException() {
     throw new WsException('example exception.');
   }
 
-  @SubscribeMessage('createMessage')
+  @SubscribeMessage(MessageEvents.createMessage)
   async create(
-    @ConnectedSocket() client: Socket,
+    @ConnectedSocket() client: MessageSocket,
     @MessageBody() createMessageDto: CreateMessageDto,
   ) {
     createMessageDto.sql_user_id = this.messagesService.getUserId(client.id);
