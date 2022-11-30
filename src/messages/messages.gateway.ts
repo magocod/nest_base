@@ -21,7 +21,7 @@ import {
 } from '@nestjs/common';
 import { WSValidationPipe } from '../common/pipes';
 import { WsLoggingInterceptor } from '../common/interceptor';
-import { MessageEvents, MessageSocket, MessageWsServer } from './interfaces';
+import { MessageEvents, WsSocket, WsServer } from './interfaces';
 
 @UsePipes(WSValidationPipe)
 // @UsePipes(new ValidationPipe())
@@ -30,7 +30,7 @@ import { MessageEvents, MessageSocket, MessageWsServer } from './interfaces';
 export class MessagesGateway
   implements OnGatewayConnection, OnGatewayDisconnect
 {
-  @WebSocketServer() wss: MessageWsServer;
+  @WebSocketServer() wss: WsServer;
   private readonly logger = new Logger('WS');
 
   constructor(
@@ -38,7 +38,7 @@ export class MessagesGateway
     private readonly jwtService: JwtService,
   ) {}
 
-  async handleConnection(client: MessageSocket) {
+  async handleConnection(client: WsSocket) {
     const token = client.handshake.headers.authentication as string;
     let payload: JwtPayload;
 
@@ -62,7 +62,7 @@ export class MessagesGateway
     this.wss.emit('clientsUpdated', this.messagesService.getConnectedClients());
   }
 
-  handleDisconnect(client: MessageSocket) {
+  handleDisconnect(client: WsSocket) {
     // console.log('Cliente desconectado', client.id )
     this.messagesService.removeClient(client.id);
 
@@ -76,7 +76,7 @@ export class MessagesGateway
 
   @SubscribeMessage(MessageEvents.messageFromClient)
   onMessageFromClient(
-    @ConnectedSocket() client: MessageSocket,
+    @ConnectedSocket() client: WsSocket,
     @MessageBody() payload: NewMessageDto,
   ) {
     //! Emite únicamente al cliente.
@@ -104,7 +104,7 @@ export class MessagesGateway
 
   @SubscribeMessage(MessageEvents.createMessage)
   async create(
-    @ConnectedSocket() client: MessageSocket,
+    @ConnectedSocket() client: WsSocket,
     @MessageBody() createMessageDto: CreateMessageDto,
   ) {
     createMessageDto.sql_user_id = this.messagesService.getUserId(client.id);

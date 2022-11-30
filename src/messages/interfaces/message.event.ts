@@ -2,6 +2,8 @@ import { Server, Socket } from 'socket.io';
 import { CommonClientToServerEvents } from '../../common/interfaces';
 import { Message } from '../entities';
 
+// messages
+
 export enum MessageEvents {
   clientsUpdated = 'clientsUpdated',
   messageFromClient = 'messageFromClient',
@@ -19,12 +21,31 @@ export interface MessageServerToClientEvents {
 export interface MessageClientToServerEvents
   extends CommonClientToServerEvents {}
 
-export type MessageWsServer = Server<
-  MessageClientToServerEvents,
-  MessageServerToClientEvents
+// groups
+
+export enum GroupEvents {
+  messageFromClientGroup = 'messageFromClientGroup',
+}
+
+export interface GroupServerToClientEvents {
+  messageFromServerGroup(payload: {
+    fullName: string;
+    message: string;
+    group: boolean;
+  }): void;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface GroupClientToServerEvents extends CommonClientToServerEvents {}
+
+// server
+
+export type WsServer = Server<
+  MessageClientToServerEvents & GroupClientToServerEvents,
+  MessageServerToClientEvents & GroupServerToClientEvents
 >;
 
-export type MessageSocket = Socket<
-  MessageServerToClientEvents,
-  MessageClientToServerEvents
+export type WsSocket = Socket<
+  MessageServerToClientEvents & GroupServerToClientEvents,
+  MessageClientToServerEvents & GroupClientToServerEvents
 >;

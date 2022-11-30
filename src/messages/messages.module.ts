@@ -4,12 +4,14 @@ import { MessagesGateway } from './messages.gateway';
 import { AuthModule } from '../auth/auth.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Message, MessageSchema } from './entities';
+import { GroupController } from './group.controller';
 
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: Message.name, schema: MessageSchema }]),
     AuthModule,
   ],
+  controllers: [GroupController],
   providers: [MessagesGateway, MessagesService],
 })
 export class MessagesModule {}
