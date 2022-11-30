@@ -1,12 +1,12 @@
 import {
   WebSocketGateway,
   SubscribeMessage,
-  MessageBody,
+  // MessageBody,
   WebSocketServer,
-  ConnectedSocket,
+  // ConnectedSocket,
 } from '@nestjs/websockets';
 // import { MessagesService } from './messages.service';
-import { NewMessageDto } from './dto';
+// import { NewMessageDto } from './dto';
 // import { Server, Socket } from 'socket.io';
 import { UseInterceptors, UsePipes } from '@nestjs/common';
 import { WSValidationPipe } from '../common/pipes';
@@ -22,10 +22,7 @@ export class GroupGateway {
   // constructor(private readonly messagesService: MessagesService) {}
 
   @SubscribeMessage(GroupEvents.messageFromClientGroup)
-  onMessageFromClientGroup(
-    @ConnectedSocket() client: WsSocket,
-    @MessageBody() payload: NewMessageDto,
-  ) {
+  onMessageFromClientGroup() {
     console.log('GroupGateway event');
     this.wss.emit('messageFromServerGroup', {
       fullName: 'GroupGateway',
