@@ -11,7 +11,7 @@ import {
 import { UseInterceptors, UsePipes } from '@nestjs/common';
 import { WSValidationPipe } from '../common/pipes';
 import { WsLoggingInterceptor } from '../common/interceptor';
-import { GroupEvents, WsServer, WsSocket } from './interfaces';
+import { GroupEvents, WsServer } from './interfaces';
 
 @UsePipes(WSValidationPipe)
 @UseInterceptors(WsLoggingInterceptor)
