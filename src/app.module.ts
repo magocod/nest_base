@@ -27,6 +27,8 @@ export const globalPrefix = 'api';
 import { BullModule } from '@nestjs/bull';
 import { JoiValidationSchema } from './config/joi.validation';
 import { MessagesModule } from './messages/messages.module';
+import { NotificationsModule } from './notifications/notifications.module';
+import { Notification } from './notifications/entities';
 
 // export function configBaseModules() {
 //   return [
@@ -99,7 +101,7 @@ export function configBaseModules(config = commonConfig) {
         // autoLoadEntities: true,
         // logging: false,
         synchronize: false, // only for quick tests
-        entities: [User, Role, Permission],
+        entities: [User, Role, Permission, Notification],
         // example generate -> typeorm migration:create ./src/migration/UserCreate
         // migrations: ['dist/migration/**/*.js'],
         // migrations: [UserCreate1664658587799],
@@ -137,6 +139,7 @@ export function configApp(app: INestApplication) {
     MailModule,
     AudioModule,
     MessagesModule,
+    NotificationsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

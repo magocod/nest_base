@@ -8,11 +8,13 @@ import {
   ManyToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
+  OneToMany,
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 
 import * as bcrypt from 'bcrypt';
 import { Role } from './role.entity';
+import { Notification } from '../../notifications/entities';
 
 @Entity('users')
 export class User {
@@ -61,6 +63,9 @@ export class User {
   @ManyToMany(() => Role, (role: Role) => role.users)
   @JoinTable()
   roles!: Role[];
+
+  @OneToMany(() => Notification, (notification) => notification.user)
+  notifications!: Notification[];
 
   @BeforeInsert()
   // @BeforeUpdate() // error update
