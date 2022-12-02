@@ -29,4 +29,6 @@ export const JoiValidationSchema = Joi.object<EnvConfig>({
   REDIS_HOST: Joi.string().optional(),
   REDIS_PORT: Joi.number().optional(),
   REDIS_PASSWORD: Joi.string().optional(),
+  // websockets
+  WS_PORT: Joi.number().optional(),
 });

@@ -15,6 +15,7 @@ import { Permission, Role, User } from './entities';
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
 import { MailModule } from '../mail/mail.module';
+import { EnvConfig } from '../config/env.config';
 
 @Module({
   imports: [
@@ -24,7 +25,7 @@ import { MailModule } from '../mail/mail.module';
     JwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: (configService: ConfigService) => {
+      useFactory: (configService: ConfigService<EnvConfig>) => {
         return {
           secret: configService.get('JWT_SECRET'),
           signOptions: {

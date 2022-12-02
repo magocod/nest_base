@@ -11,11 +11,15 @@ import { NotificationsService } from './notifications.service';
 import { CreateNotificationDto, UpdateNotificationDto } from './dto';
 import { Auth, GetUser } from '../auth/decorators';
 import { User } from '../auth/entities';
+import { WsService } from '../ws/ws.service';
 
 @Auth()
 @Controller('notifications')
 export class NotificationsController {
-  constructor(private readonly notificationsService: NotificationsService) {}
+  constructor(
+    private readonly notificationsService: NotificationsService,
+    private readonly wsService: WsService,
+  ) {}
 
   @Post()
   create(
@@ -46,5 +50,10 @@ export class NotificationsController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.notificationsService.remove(+id);
+  }
+
+  @Post('fake_volatile')
+  sendFakeVolatileMessage() {
+    return this.wsService.fakeWss.send();
   }
 }

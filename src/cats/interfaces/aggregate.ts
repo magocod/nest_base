@@ -1,6 +1,6 @@
 import { Cat, OwnerDocument, StoryDocument } from '../entities';
 
-export class CatAggregateResult extends Cat {
+export interface CatAggregateResult extends Cat {
   ownerData: OwnerDocument;
   stories: StoryDocument[];
 }

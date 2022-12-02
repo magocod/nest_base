@@ -26,6 +26,8 @@ export const EnvConfiguration = () => ({
   REDIS_HOST: process.env.REDIS_HOST,
   REDIS_PORT: process.env.REDIS_PORT,
   REDIS_PASSWORD: process.env.REDIS_PASSWORD,
+  // websockets
+  WS_PORT: process.env.WS_PORT,
 });
 
 const config = EnvConfiguration();

@@ -29,6 +29,7 @@ import { JoiValidationSchema } from './config/joi.validation';
 import { MessagesModule } from './messages/messages.module';
 import { NotificationsModule } from './notifications/notifications.module';
 import { Notification } from './notifications/entities';
+import { WsModule } from './ws/ws.module';
 
 // export function configBaseModules() {
 //   return [
@@ -140,6 +141,7 @@ export function configApp(app: INestApplication) {
     AudioModule,
     MessagesModule,
     NotificationsModule,
+    WsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

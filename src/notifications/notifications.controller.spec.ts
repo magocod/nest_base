@@ -28,7 +28,7 @@ describe('NotificationsController', () => {
     await module.close();
   });
 
-  it('should be defined', () => {
-    expect(controller).toBeDefined();
+  it('send notification without saving to bd, fake wss', () => {
+    expect(controller.sendFakeVolatileMessage()).toEqual(1);
   });
 });
