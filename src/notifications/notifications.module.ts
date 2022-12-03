@@ -27,6 +27,6 @@ import { EnvConfig } from '../config/env.config';
   ],
   controllers: [NotificationsController],
   providers: [NotificationsService],
-  exports: [TypeOrmModule],
+  exports: [TypeOrmModule, WsModule],
 })
 export class NotificationsModule {}

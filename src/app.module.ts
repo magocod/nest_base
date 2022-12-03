@@ -141,7 +141,7 @@ export function configApp(app: INestApplication) {
     AudioModule,
     MessagesModule,
     NotificationsModule,
-    WsModule,
+    // WsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
