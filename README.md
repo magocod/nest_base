@@ -6,27 +6,28 @@
 
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
+## Requirements
+
+- Node js 16 (https://nodejs.org/en/download/)
+- Postgresql 14 (https://www.postgresql.org/)
+- Mongodb 5 (https://www.mongodb.com/home)
+- Redis 7 (https://redis.io/)
+
 ## Installation
 
 ```bash
 npm install
 ```
 
-## Docker
+Clone the ```.env.template``` file and rename it to ```.env```
+
+## Docker (optional)
 
 ```bash
 docker-compose up -d
 ```
 
-### Configure db
-
-- compile the application
-
-```bash
-npm run build
-```
-
-- run db migrations
+## Configure db
 
 ```bash
 npm run migration:run
@@ -38,13 +39,7 @@ npm run migration:run
 npm run seed:run
 ```
 
-```bash
-npm run seed:db
-```
-
 ## Running the app
-
-- development
 
 ```bash
 npm run start
@@ -56,10 +51,15 @@ npm run start
 npm run start:dev
 ```
 
+- hot-module replacement
+```bash
+npm run start:hmr
+```
+
 - production mode
 
 ```bash
-$ npm run start:prod
+npm run start:prod
 ```
 
 ## Test
@@ -70,14 +70,15 @@ $ npm run start:prod
 npm run test
 ```
 
+- test coverage
+
+```bash
+npm run test:cov
+```
+
 - e2e tests
 
 ```bash
 npm run test:e2e
 ```
 
-- test coverage
-
-```bash
-npm run test:cov
-```

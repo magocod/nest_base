@@ -3,7 +3,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { ApiVersion } from '../app.constants';
 import { MessagesGateway } from './messages.gateway';
 
-@ApiTags('Messages-Groups')
+@ApiTags('Messages_groups')
 @Controller({ path: 'groups', version: ApiVersion.v1 })
 export class GroupController {
   constructor(private readonly messagesGateway: MessagesGateway) {}
