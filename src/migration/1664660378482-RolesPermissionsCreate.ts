@@ -34,13 +34,15 @@ export class RolesPermissionsCreate1664660378482 implements MigrationInterface {
           {
             name: 'createdAt',
             // type: "timestamp",
-            type: 'timestamp with time zone', // pg only
+            // type: 'timestamp with time zone', // pg only
+            type: 'timestamp without time zone',
             default: 'now()',
           },
           {
             name: 'updatedAt',
             // type: "timestamp",
-            type: 'timestamp with time zone', // pg only
+            // type: 'timestamp with time zone', // pg only
+            type: 'timestamp without time zone',
             default: 'now()',
           },
         ],

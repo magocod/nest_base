@@ -17,6 +17,7 @@ export class CreateRoleDto {
   @IsString()
   description: string;
 
+  @ApiProperty()
   @IsBoolean()
   @IsOptional()
   isActive?: boolean;

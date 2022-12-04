@@ -10,22 +10,26 @@ on:
     branches: ['main']
 
 env:
+  # server
   LOG_HTTP_REQUEST: false
-  # The hostname used to communicate with the PostgreSQL service container
+  # postgres
   DB_HOST: localhost
-  # The default PostgreSQL port
   DB_PORT: 5432
   DB_PASSWORD: postgres
   DB_NAME: postgres
   DB_USERNAME: postgres
+  # auth
   JWT_SECRET: secret
+  # mongodb
   MONGO_URL: mongodb://127.0.0.1:27017/nest_base?readPreference=primary
   MONGODB_DATABASE: nest_base
+  # mail
   MAIL_HOST: smtp.mailtrap.io
   MAIL_USER: user
   MAIL_PASSWORD: 123
   MAIL_FROM: noreply@mailtrap.io
   MAIL_PORT: 2525
+  # redis
   REDIS_HOST: localhost
   REDIS_PORT: 6379
   REDIS_PASSWORD: 123

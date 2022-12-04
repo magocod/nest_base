@@ -10,6 +10,7 @@ import { RoleCreate1664660233196 } from './migration/1664660233196-RoleCreate';
 import { PermissionCreate1664660241262 } from './migration/1664660241262-PermissionCreate';
 import { UsersRolesCreate1664660368705 } from './migration/1664660368705-UsersRolesCreate';
 import { RolesPermissionsCreate1664660378482 } from './migration/1664660378482-RolesPermissionsCreate';
+import { NotificationCreate1670110209569 } from './migration/1670110209569-NotificationCreate';
 
 // const entitiesPath =
 //   process.env.NODE_ENV === "testing"
@@ -34,6 +35,7 @@ export const AppDataSource = new DataSource({
     PermissionCreate1664660241262,
     UsersRolesCreate1664660368705,
     RolesPermissionsCreate1664660378482,
+    NotificationCreate1670110209569,
   ],
   // migrations,
   subscribers: [],

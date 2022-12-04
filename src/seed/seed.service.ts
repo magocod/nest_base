@@ -2,11 +2,7 @@ import { Injectable } from '@nestjs/common';
 // import { InjectRepository } from '@nestjs/typeorm';
 import { User, Role, Permission } from '../auth/entities';
 import { DataSource, Repository } from 'typeorm';
-import {
-  RoleNames,
-  PermissionNames,
-  DefaultEmails,
-} from '../auth/interfaces/permission';
+import { RoleNames, PermissionNames, DefaultEmails } from '../auth/interfaces';
 
 @Injectable()
 export class SeedService {
