@@ -17,7 +17,9 @@ import { WS_SERVER } from '../ws/ws.contants';
 // import { WebSocketServer } from 'ws';
 import * as WebSocket from 'ws';
 import { WebSocketServerWrapper } from '../ws/ws-server.provider';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Notifications')
 @Auth()
 @Controller('notifications')
 export class NotificationsController {
