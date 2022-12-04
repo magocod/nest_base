@@ -30,6 +30,7 @@ export class NotificationCreate1670110209569 implements MigrationInterface {
             name: 'description',
             type: 'text',
             isNullable: false,
+            default: "''",
           },
           {
             name: 'isActive',

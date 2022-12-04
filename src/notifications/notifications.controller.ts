@@ -18,10 +18,11 @@ import { WS_SERVER } from '../ws/ws.contants';
 import * as WebSocket from 'ws';
 import { WebSocketServerWrapper } from '../ws/ws-server.provider';
 import { ApiTags } from '@nestjs/swagger';
+import { ApiVersion } from '../app.constants';
 
 @ApiTags('Notifications')
 @Auth()
-@Controller('notifications')
+@Controller({ path: 'notifications', version: ApiVersion.v1 })
 export class NotificationsController {
   constructor(
     private readonly notificationsService: NotificationsService,
