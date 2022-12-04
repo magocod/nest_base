@@ -29,6 +29,7 @@ import { JoiValidationSchema } from './config/joi.validation';
 import { MessagesModule } from './messages/messages.module';
 import { NotificationsModule } from './notifications/notifications.module';
 import { Notification } from './notifications/entities';
+import { WsModule } from './ws/ws.module';
 // import { WsModule } from './ws/ws.module';
 
 // export function configBaseModules() {
@@ -55,7 +56,7 @@ import { Notification } from './notifications/entities';
 // }
 
 // default config
-export const commonConfig = { postgres: true, mongodb: true };
+export const commonConfig = { postgres: true, mongodb: true, websocket: true };
 
 // without db
 export const withoutDbConfig = {
@@ -65,10 +66,18 @@ export const withoutDbConfig = {
 };
 
 // only postgresql
-export const postgresConfig = { ...commonConfig, mongodb: false };
+export const postgresConfig = {
+  ...commonConfig,
+  mongodb: false,
+  websocket: false,
+};
 
 // only mongodb
-export const mongoConfig = { ...commonConfig, postgres: false };
+export const mongoConfig = {
+  ...commonConfig,
+  postgres: false,
+  websocket: false,
+};
 
 export function configBaseModules(config = commonConfig) {
   const modules = [
@@ -114,6 +123,14 @@ export function configBaseModules(config = commonConfig) {
     modules.push(MongooseModule.forRoot(process.env.MONGO_URL));
   }
 
+  if (config.websocket) {
+    modules.push(
+      WsModule.forRoot({
+        port: +process.env.WS_PORT,
+      }),
+    );
+  }
+
   return modules;
 }
 
@@ -141,7 +158,6 @@ export function configApp(app: INestApplication) {
     AudioModule,
     MessagesModule,
     NotificationsModule,
-    // WsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -15,8 +15,9 @@ import { ApiProperty } from '@nestjs/swagger';
 import * as bcrypt from 'bcrypt';
 import { Role } from './role.entity';
 import { Notification } from '../../notifications/entities';
+import { USER_TABLE } from '../auth.constants';
 
-@Entity('users')
+@Entity(USER_TABLE)
 export class User {
   @ApiProperty()
   @PrimaryGeneratedColumn()

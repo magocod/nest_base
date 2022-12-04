@@ -1,7 +1,7 @@
 import { ModuleMetadata, Type } from '@nestjs/common';
 
 export interface WsModuleOptions {
-  PORT: number;
+  port: number;
 }
 
 export interface WsOptionsFactory {

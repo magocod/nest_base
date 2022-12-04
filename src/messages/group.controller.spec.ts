@@ -10,7 +10,11 @@ describe('GroupController', () => {
 
   beforeEach(async () => {
     module = await Test.createTestingModule({
-      imports: [...configBaseModules(commonConfig), AuthModule, MessagesModule],
+      imports: [
+        ...configBaseModules({ ...commonConfig, websocket: false }),
+        AuthModule,
+        MessagesModule,
+      ],
     }).compile();
 
     controller = module.get<GroupController>(GroupController);

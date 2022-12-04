@@ -10,7 +10,10 @@ describe('NotificationsService', () => {
 
   beforeEach(async () => {
     module = await Test.createTestingModule({
-      imports: [...configBaseModules(postgresConfig), NotificationsModule],
+      imports: [
+        ...configBaseModules({ ...postgresConfig, websocket: true }),
+        NotificationsModule,
+      ],
       // providers: [NotificationsService],
     }).compile();
 

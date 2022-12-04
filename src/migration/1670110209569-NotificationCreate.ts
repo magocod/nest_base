@@ -1,10 +1,17 @@
-import { MigrationInterface, QueryRunner, Table } from 'typeorm';
+import {
+  MigrationInterface,
+  QueryRunner,
+  Table,
+  TableForeignKey,
+} from 'typeorm';
+import { NOTIFICATION_TABLE } from '../notifications/notifications.contants';
+import { USER_TABLE } from '../auth/auth.constants';
 
-export class RoleCreate1664660233196 implements MigrationInterface {
+export class NotificationCreate1670110209569 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
-        name: 'roles',
+        name: NOTIFICATION_TABLE,
         columns: [
           {
             name: 'id',
@@ -14,7 +21,7 @@ export class RoleCreate1664660233196 implements MigrationInterface {
             generationStrategy: 'increment',
           },
           {
-            name: 'name',
+            name: 'title',
             type: 'text',
             isUnique: false,
             isNullable: false,
@@ -29,6 +36,11 @@ export class RoleCreate1664660233196 implements MigrationInterface {
             type: 'bool',
             isNullable: false,
             default: true,
+          },
+          {
+            name: 'userId',
+            type: 'int',
+            isNullable: false,
           },
           {
             name: 'createdAt',
@@ -48,9 +60,19 @@ export class RoleCreate1664660233196 implements MigrationInterface {
       }),
       true,
     );
+
+    await queryRunner.createForeignKey(
+      NOTIFICATION_TABLE,
+      new TableForeignKey({
+        columnNames: ['userId'],
+        referencedColumnNames: ['id'],
+        referencedTableName: USER_TABLE,
+        onDelete: 'CASCADE',
+      }),
+    );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropTable('roles');
+    await queryRunner.dropTable(NOTIFICATION_TABLE);
   }
 }

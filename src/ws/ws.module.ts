@@ -1,9 +1,28 @@
-import { DynamicModule, Module, Provider } from '@nestjs/common';
+import {
+  DynamicModule,
+  // Logger,
+  Module,
+  // OnApplicationShutdown,
+  Provider,
+} from '@nestjs/common';
 import { WsService } from './ws.service';
-import { wsServerProviders } from './ws-server.provider';
+import {
+  // createWsServerProvider,
+  // FakeWsServer,
+  wsServerProviders,
+} from './ws-server.provider';
 // import { ConfigModule } from '@nestjs/config';
-import { WsModuleAsyncOptions, WsOptionsFactory } from './interfaces';
-import { WSS_MODULE_OPTIONS } from './ws.contants';
+import {
+  WsModuleAsyncOptions,
+  WsModuleOptions,
+  WsOptionsFactory,
+} from './interfaces';
+import {
+  // WS_SERVER,
+  WSS_MODULE_OPTIONS,
+} from './ws.contants';
+// import { ModuleRef } from '@nestjs/core';
+import { WsCoreModule } from './ws-core.module';
 
 // @Module({
 //   providers: [...wsServerProviders, WsService],
@@ -16,6 +35,8 @@ import { WSS_MODULE_OPTIONS } from './ws.contants';
   exports: [...wsServerProviders, WsService],
 })
 export class WsModule {
+  // constructor(private readonly moduleRef: ModuleRef) {}
+
   static register(): DynamicModule {
     // console.log('WS_PORT', process.env.WS_PORT);
     return {
@@ -70,6 +91,31 @@ export class WsModule {
       useFactory: async (optionsFactory: WsOptionsFactory) =>
         await optionsFactory.createWsOptions(),
       inject: [options.useExisting || options.useClass],
+    };
+  }
+
+  // onApplicationShutdown(signal?: string) {
+  //   // const wss: FakeWsServer = this.moduleRef.get(WS_SERVER);
+  // }
+
+  // TODO complete WsCoreModule
+
+  static forRoot(options: WsModuleOptions): DynamicModule {
+    // console.log('WS_OPTIONS', options);
+    // const provider = createWsServerProvider(options);
+    return {
+      module: WsModule,
+      imports: [WsCoreModule.forRoot(options)],
+      // providers: [provider],
+      // exports: [provider],
+    };
+  }
+
+  static forFeature(): DynamicModule {
+    return {
+      module: WsModule,
+      providers: [],
+      exports: [],
     };
   }
 }

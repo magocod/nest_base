@@ -11,7 +11,11 @@ describe('MessagesGateway', () => {
 
   beforeEach(async () => {
     module = await Test.createTestingModule({
-      imports: [...configBaseModules(commonConfig), AuthModule, MessagesModule],
+      imports: [
+        ...configBaseModules({ ...commonConfig, websocket: false }),
+        AuthModule,
+        MessagesModule,
+      ],
       providers: [
         // MessagesGateway,
         // MessagesService

@@ -6,6 +6,9 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 import { AppModule, configApp } from './app.module';
 import { loggerMiddleware } from './common/middleware';
+import { WS_SERVER } from './ws/ws.contants';
+import { WebSocketServerWrapper } from './ws/ws-server.provider';
+// import { createServer } from 'http';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -34,7 +37,24 @@ async function bootstrap() {
   }
 
   await app.listen(process.env.PORT);
-  logger.log(`App running on ${process.env.HOST_API}`);
+  logger.log(`App running on http://localhost:${process.env.PORT}/api`);
+
+  // websocket
+  const wss = await app.get<WebSocketServerWrapper, WebSocketServerWrapper>(
+    WS_SERVER,
+  );
+
+  // option 1
+  // wss.boot(app.getHttpServer());
+
+  // option 2
+  // const server = createServer();
+  // wss.boot({ server });
+  // server.listen(process.env.WS_PORT);
+
+  // option 3
+  wss.boot({ port: +process.env.WS_PORT });
+  logger.log(`App running on ws://localhost:${process.env.WS_PORT}`);
 }
 
 void bootstrap();

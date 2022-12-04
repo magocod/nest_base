@@ -6,12 +6,17 @@ import {
   Patch,
   Param,
   Delete,
+  Inject,
 } from '@nestjs/common';
 import { NotificationsService } from './notifications.service';
 import { CreateNotificationDto, UpdateNotificationDto } from './dto';
 import { Auth, GetUser } from '../auth/decorators';
 import { User } from '../auth/entities';
 import { WsService } from '../ws/ws.service';
+import { WS_SERVER } from '../ws/ws.contants';
+// import { WebSocketServer } from 'ws';
+import * as WebSocket from 'ws';
+import { WebSocketServerWrapper } from '../ws/ws-server.provider';
 
 @Auth()
 @Controller('notifications')
@@ -19,14 +24,23 @@ export class NotificationsController {
   constructor(
     private readonly notificationsService: NotificationsService,
     private readonly wsService: WsService,
+    // @Inject(WS_SERVER) private wss: WebSocketServer,
+    @Inject(WS_SERVER) public wss: WebSocketServerWrapper,
   ) {}
 
   @Post()
-  create(
+  async create(
     @Body() createNotificationDto: CreateNotificationDto,
     @GetUser() user: User,
   ) {
-    return this.notificationsService.create(createNotificationDto, user);
+    const notification = await this.notificationsService.create(
+      createNotificationDto,
+      user,
+    );
+
+    this.wsService.broadcast(JSON.stringify(notification));
+
+    return notification;
   }
 
   @Get()
@@ -55,5 +69,18 @@ export class NotificationsController {
   @Post('fake_volatile')
   sendFakeVolatileMessage() {
     return this.wsService.fakeWss.send();
+  }
+
+  @Post('volatile')
+  sendVolatileMessage() {
+    this.wss.getInstance().clients.forEach(function each(client) {
+      if (client.readyState === WebSocket.OPEN) {
+        client.send(
+          JSON.stringify({
+            message: 'notification all connected from inject(WS_SERVER)',
+          }),
+        );
+      }
+    });
   }
 }
