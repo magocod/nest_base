@@ -10,6 +10,9 @@ import { WS_SERVER } from './ws/ws.contants';
 import { WebSocketServerWrapper } from './ws/ws-server.provider';
 // import { createServer } from 'http';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+declare const module: any;
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const logger = new Logger('Bootstrap');
@@ -45,7 +48,8 @@ async function bootstrap() {
   );
 
   // option 1
-  // wss.boot(app.getHttpServer());
+  wss.boot({ server: app.getHttpServer() });
+  logger.log(`App running on ws://localhost:${process.env.PORT}`);
 
   // option 2
   // const server = createServer();
@@ -53,8 +57,13 @@ async function bootstrap() {
   // server.listen(process.env.WS_PORT);
 
   // option 3
-  wss.boot({ port: +process.env.WS_PORT });
-  logger.log(`App running on ws://localhost:${process.env.WS_PORT}`);
+  // wss.boot({ port: +process.env.WS_PORT });
+  // logger.log(`App running on ws://localhost:${process.env.WS_PORT}`);
+
+  if (module.hot) {
+    module.hot.accept();
+    module.hot.dispose(() => app.close());
+  }
 }
 
 void bootstrap();
