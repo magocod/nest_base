@@ -31,6 +31,11 @@ import { NotificationsModule } from './notifications/notifications.module';
 import { Notification } from './notifications/entities';
 import { WsModule } from './ws/ws.module';
 // import { WsModule } from './ws/ws.module';
+import { DashboardModule } from './dashboard/dashboard.module';
+import { GraphQLModule } from '@nestjs/graphql';
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { join } from 'path';
+import { ApolloServerPluginLandingPageLocalDefault } from 'apollo-server-core';
 
 // export function configBaseModules() {
 //   return [
@@ -97,6 +102,12 @@ export function configBaseModules(config = commonConfig) {
       //   duration: 8000,
       // },
     }),
+    GraphQLModule.forRoot<ApolloDriverConfig>({
+      driver: ApolloDriver,
+      autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
+      playground: false,
+      plugins: [ApolloServerPluginLandingPageLocalDefault],
+    }),
   ];
 
   if (config.postgres) {
@@ -158,6 +169,7 @@ export function configApp(app: INestApplication) {
     AudioModule,
     MessagesModule,
     NotificationsModule,
+    DashboardModule,
   ],
   controllers: [AppController],
   providers: [AppService],

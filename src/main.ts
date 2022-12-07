@@ -1,4 +1,4 @@
-import helmet from 'helmet';
+// import helmet from 'helmet';
 
 import { NestFactory } from '@nestjs/core';
 import { Logger } from '@nestjs/common';
@@ -27,7 +27,9 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
 
-  app.use(helmet());
+  // app.use(
+  //   helmet({ contentSecurityPolicy: false }),
+  // );
 
   // console.log(
   //   'LOG_HTTP_REQUEST',
@@ -41,6 +43,7 @@ async function bootstrap() {
 
   await app.listen(process.env.PORT);
   logger.log(`App running on http://localhost:${process.env.PORT}/api`);
+  logger.log(`App running on http://localhost:${process.env.PORT}/graphql`);
 
   // websocket
   const wss = await app.get<WebSocketServerWrapper, WebSocketServerWrapper>(
