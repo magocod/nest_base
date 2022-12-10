@@ -1,1 +1,2 @@
-export * from './dashboard.entity';
+export * from './dashboard.type';
+export * from './item.type';

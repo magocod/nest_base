@@ -1,10 +1,13 @@
-import { Resolver } from '@nestjs/graphql';
+import { Query, Resolver } from '@nestjs/graphql';
 import { DashboardService } from './dashboard.service';
+import { Dashboard } from './types';
 
 @Resolver()
 export class DashboardResolver {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   constructor(private readonly dashboardService: DashboardService) {}
 
-  // ...
+  @Query(() => Dashboard, { name: 'sampleDashboard' })
+  sampleDashboard(): Dashboard {
+    return this.dashboardService.sample();
+  }
 }
