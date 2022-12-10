@@ -1,7 +1,7 @@
 import { Float, Query, Resolver, Int, Args } from '@nestjs/graphql';
 
 @Resolver()
-export class ExampleResolver {
+export class AppResolver {
   @Query(() => String, {
     name: 'hello',
   })

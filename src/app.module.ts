@@ -36,6 +36,7 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { join } from 'path';
 import { ApolloServerPluginLandingPageLocalDefault } from 'apollo-server-core';
+import { AppResolver } from './app.resolver';
 
 // export function configBaseModules() {
 //   return [
@@ -173,6 +174,6 @@ export function configApp(app: INestApplication) {
     DashboardModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, AppResolver],
 })
 export class AppModule {}
