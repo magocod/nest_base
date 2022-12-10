@@ -12,7 +12,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
 import { AuthModule } from './auth/auth.module';
-import { User, Role, Permission } from './auth/entities';
+// import { User, Role, Permission } from './auth/entities';
 
 import { EnvConfiguration } from './config/env.config';
 
@@ -28,7 +28,7 @@ import { BullModule } from '@nestjs/bull';
 import { JoiValidationSchema } from './config/joi.validation';
 import { MessagesModule } from './messages/messages.module';
 import { NotificationsModule } from './notifications/notifications.module';
-import { Notification } from './notifications/entities';
+// import { Notification } from './notifications/entities';
 import { WsModule } from './ws/ws.module';
 // import { WsModule } from './ws/ws.module';
 import { DashboardModule } from './dashboard/dashboard.module';
@@ -122,7 +122,8 @@ export function configBaseModules(config = commonConfig) {
         // autoLoadEntities: true,
         // logging: false,
         synchronize: false, // only for quick tests
-        entities: [User, Role, Permission, Notification],
+        // entities: [User, Role, Permission, Notification],
+        autoLoadEntities: true,
         // example generate -> typeorm migration:create ./src/migration/UserCreate
         // migrations: ['dist/migration/**/*.js'],
         // migrations: [UserCreate1664658587799],
