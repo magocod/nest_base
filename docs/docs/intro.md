@@ -1,17 +1,14 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+---
+sidebar_position: 1
+---
 
-## Description
+# Getting Started
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+### What you'll need
 
-## Requirements
-
-- Node js 16 (https://nodejs.org/en/download/)
-- Postgresql 14 (https://www.postgresql.org/)
-- Mongodb 5 (https://www.mongodb.com/home)
-- Redis 7 (https://redis.io/)
+- [Node.js](https://nodejs.org/en/download/) version 16.14 or above:
+  - When installing Node.js, you are recommended to check all checkboxes related to dependencies.
+- ...
 
 ## Installation
 
@@ -81,4 +78,3 @@ npm run test:cov
 ```bash
 npm run test:e2e
 ```
-
