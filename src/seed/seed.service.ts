@@ -127,15 +127,15 @@ export class SeedService {
 
     await this.topicRepository.save([
       {
-        name: 'a'
+        name: 'a',
       },
       {
         name: 'b',
       },
       {
         name: 'c',
-      }
-    ])
+      },
+    ]);
 
     return {
       users: await this.userRepository.count(),

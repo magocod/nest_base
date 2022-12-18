@@ -37,7 +37,7 @@ export const AppDataSource = new DataSource({
     UsersRolesCreate1664660368705,
     RolesPermissionsCreate1664660378482,
     NotificationCreate1670110209569,
-    TopicCreate1670110209568
+    TopicCreate1670110209568,
   ],
   // migrations,
   subscribers: [],

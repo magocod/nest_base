@@ -28,13 +28,12 @@ import {
 import { PermissionNames } from '../../src/auth/interfaces';
 import { Permission } from '../../src/auth/entities';
 import { ApiRouteVersion } from '../../src/app.constants';
-import {DataSource} from "typeorm";
+import { DataSource } from 'typeorm';
 
 const baseRoute = `/${globalPrefix}/${ApiRouteVersion.v1}/permissions`;
 
 describe('Permissions - /permissions (e2e)', () => {
   let app: INestApplication;
-  let service: AppService;
   let jwtService: JwtService;
   let httpClient: supertest.SuperTest<supertest.Test>;
   let permissions: Permission[] = [];
@@ -45,7 +44,6 @@ describe('Permissions - /permissions (e2e)', () => {
       imports: [AppModule],
     }).compile();
 
-    service = moduleFixture.get<AppService>(AppService);
     jwtService = moduleFixture.get<JwtService>(JwtService);
     ds = moduleFixture.get<DataSource>(DataSource);
 
