@@ -1,6 +1,10 @@
 # compiled output
 /dist
+
 /node_modules
+
+# generated files
+/src/schema.gql
 
 # Logs
 logs

@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { NotificationsService } from './notifications.service';
 import { NotificationsController } from './notifications.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Notification } from './entities';
+import { Notification, Topic } from './entities';
 import { AuthModule } from '../auth/auth.module';
 import { WsModule } from '../ws/ws.module';
 import {
@@ -14,7 +14,7 @@ import {
 @Module({
   imports: [
     ConfigModule,
-    TypeOrmModule.forFeature([Notification]),
+    TypeOrmModule.forFeature([Notification, Topic]),
     AuthModule,
     WsModule.forFeature(),
     // WsModule.register(),

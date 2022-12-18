@@ -33,7 +33,7 @@ docker-compose up -d
 npm run migration:run
 ```
 
-### Populate the database (optional)
+## Populate the database (optional)
 
 ```bash
 npm run seed:run

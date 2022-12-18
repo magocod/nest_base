@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateNotificationDto, UpdateNotificationDto } from './dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Notification } from './entities';
@@ -27,13 +27,31 @@ export class NotificationsService {
     return `This action returns all notifications`;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} notification`;
+  async findOne(id: number): Promise<Notification> {
+    const notification = await this.notificationRepository.findOne({
+      where: { id },
+    });
+
+    if (!notification)
+      throw new NotFoundException(`Notification with ${id} not found`);
+
+    return notification;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  update(id: number, updateNotificationDto: UpdateNotificationDto) {
-    return `This action updates a #${id} notification`;
+  async update(
+    id: number,
+    updateNotificationDto: UpdateNotificationDto,
+  ): Promise<Notification> {
+    const notification = await this.notificationRepository.preload({
+      id,
+      ...updateNotificationDto,
+    });
+    if (!notification)
+      throw new NotFoundException(`Notification with id: ${id} not found`);
+
+    await this.notificationRepository.save(notification);
+
+    return notification;
   }
 
   remove(id: number) {

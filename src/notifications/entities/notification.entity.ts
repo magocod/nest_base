@@ -9,8 +9,10 @@ import {
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { User } from '../../auth/entities';
+import { NOTIFICATION_TABLE } from '../notifications.contants';
+import { Topic } from './topic.entity';
 
-@Entity({ name: 'notifications' })
+@Entity({ name: NOTIFICATION_TABLE })
 export class Notification {
   @ApiProperty()
   @PrimaryGeneratedColumn()
@@ -35,6 +37,10 @@ export class Notification {
   userId!: number;
 
   @ApiProperty()
+  @Column('int')
+  topicId!: number;
+
+  @ApiProperty()
   @CreateDateColumn()
   createdAt!: Date;
 
@@ -45,4 +51,10 @@ export class Notification {
   @ManyToOne(() => User, (user) => user.notifications, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'userId' })
   user!: User;
+
+  @ManyToOne(() => Topic, (topic) => topic.notifications, {
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn({ name: 'topicId' })
+  topic!: Topic;
 }

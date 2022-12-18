@@ -3,6 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { User, Role, Permission } from '../auth/entities';
 import { DataSource, Repository } from 'typeorm';
 import { RoleNames, PermissionNames, DefaultEmails } from '../auth/interfaces';
+import { Topic } from '../notifications/entities/topic.entity';
 
 @Injectable()
 export class SeedService {
@@ -11,6 +12,8 @@ export class SeedService {
   private readonly userRepository: Repository<User>;
   private readonly roleRepository: Repository<Role>;
   private readonly permissionRepository: Repository<Permission>;
+
+  private readonly topicRepository: Repository<Topic>;
 
   constructor(
     // error inject repository
@@ -21,6 +24,7 @@ export class SeedService {
     this.userRepository = dataSource.getRepository(User);
     this.roleRepository = dataSource.getRepository(Role);
     this.permissionRepository = dataSource.getRepository(Permission);
+    this.topicRepository = dataSource.getRepository(Topic);
   }
 
   // for testing
@@ -120,6 +124,18 @@ export class SeedService {
     //     2,
     //   ),
     // );
+
+    await this.topicRepository.save([
+      {
+        name: 'a',
+      },
+      {
+        name: 'b',
+      },
+      {
+        name: 'c',
+      },
+    ]);
 
     return {
       users: await this.userRepository.count(),

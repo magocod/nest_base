@@ -5,7 +5,6 @@ import { JwtService } from '@nestjs/jwt';
 import supertest from 'supertest';
 import * as request from 'supertest';
 import { AppModule, globalPrefix, configApp } from './../../src/app.module';
-import { AppService } from './../../src/app.service';
 
 import {
   generateUser,
@@ -28,23 +27,24 @@ import {
 import { PermissionNames } from '../../src/auth/interfaces';
 import { Permission } from '../../src/auth/entities';
 import { ApiRouteVersion } from '../../src/app.constants';
+import { DataSource } from 'typeorm';
 
 const baseRoute = `/${globalPrefix}/${ApiRouteVersion.v1}/permissions`;
 
 describe('Permissions - /permissions (e2e)', () => {
   let app: INestApplication;
-  let service: AppService;
   let jwtService: JwtService;
   let httpClient: supertest.SuperTest<supertest.Test>;
   let permissions: Permission[] = [];
+  let ds: DataSource;
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
     }).compile();
 
-    service = moduleFixture.get<AppService>(AppService);
     jwtService = moduleFixture.get<JwtService>(JwtService);
+    ds = moduleFixture.get<DataSource>(DataSource);
 
     app = moduleFixture.createNestApplication();
     configApp(app);
@@ -52,7 +52,7 @@ describe('Permissions - /permissions (e2e)', () => {
     await app.init();
     httpClient = request(app.getHttpServer());
 
-    permissions = await upsertPermission(service.getDataSource());
+    permissions = await upsertPermission(ds);
   });
 
   afterAll(async () => {
@@ -68,15 +68,15 @@ describe('Permissions - /permissions (e2e)', () => {
 
   describe('findAll', function () {
     it('unfiltered', async () => {
-      const role = await generateRole(service.getDataSource(), {
+      const role = await generateRole(ds, {
         permissions: permissions.filter((p) => {
           return p.name === PermissionNames.USER;
         }),
       });
-      const { user } = await generateUser(service.getDataSource(), {
+      const { user } = await generateUser(ds, {
         roles: [role],
       });
-      await generatePermission(service.getDataSource());
+      await generatePermission(ds);
 
       const res = await httpClient
         .get(baseRoute)
@@ -91,15 +91,15 @@ describe('Permissions - /permissions (e2e)', () => {
     it('paginate', async () => {
       const qs: SimplePaginationDto = basicPagination();
       qs.perPage = TESTING_DEFAULT_PAGINATION;
-      const role = await generateRole(service.getDataSource(), {
+      const role = await generateRole(ds, {
         permissions: permissions.filter((p) => {
           return p.name === PermissionNames.USER;
         }),
       });
-      const { user } = await generateUser(service.getDataSource(), {
+      const { user } = await generateUser(ds, {
         roles: [role],
       });
-      await generatePermission(service.getDataSource());
+      await generatePermission(ds);
 
       const res = await httpClient
         .get(addQueryString(baseRoute, qs as QueryString))
