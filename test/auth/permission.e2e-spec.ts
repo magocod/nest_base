@@ -5,7 +5,6 @@ import { JwtService } from '@nestjs/jwt';
 import supertest from 'supertest';
 import * as request from 'supertest';
 import { AppModule, globalPrefix, configApp } from './../../src/app.module';
-import { AppService } from './../../src/app.service';
 
 import {
   generateUser,
