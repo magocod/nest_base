@@ -4,7 +4,10 @@ import {
   Table,
   TableForeignKey,
 } from 'typeorm';
-import { NOTIFICATION_TABLE } from '../notifications/notifications.contants';
+import {
+  NOTIFICATION_TABLE,
+  TOPIC_TABLE,
+} from '../notifications/notifications.contants';
 import { USER_TABLE } from '../auth/auth.constants';
 
 export class NotificationCreate1670110209569 implements MigrationInterface {
@@ -44,6 +47,11 @@ export class NotificationCreate1670110209569 implements MigrationInterface {
             isNullable: false,
           },
           {
+            name: 'topicId',
+            type: 'int',
+            isNullable: false,
+          },
+          {
             name: 'createdAt',
             // type: "timestamp",
             // type: 'timestamp with time zone', // pg only
@@ -68,6 +76,16 @@ export class NotificationCreate1670110209569 implements MigrationInterface {
         columnNames: ['userId'],
         referencedColumnNames: ['id'],
         referencedTableName: USER_TABLE,
+        onDelete: 'CASCADE',
+      }),
+    );
+
+    await queryRunner.createForeignKey(
+      NOTIFICATION_TABLE,
+      new TableForeignKey({
+        columnNames: ['topicId'],
+        referencedColumnNames: ['id'],
+        referencedTableName: TOPIC_TABLE,
         onDelete: 'CASCADE',
       }),
     );

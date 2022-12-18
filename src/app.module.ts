@@ -120,7 +120,6 @@ export function configBaseModules(config = commonConfig) {
         database: process.env.DB_NAME,
         username: process.env.DB_USERNAME,
         password: process.env.DB_PASSWORD,
-        // autoLoadEntities: true,
         // logging: false,
         synchronize: false, // only for quick tests
         // entities: [User, Role, Permission, Notification],
