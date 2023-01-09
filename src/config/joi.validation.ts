@@ -31,4 +31,6 @@ export const JoiValidationSchema = Joi.object<EnvConfig>({
   REDIS_PASSWORD: Joi.string().optional(),
   // websockets
   WS_PORT: Joi.number().optional(),
+  // mysql
+  MYSQL_DB_NAME: Joi.string().required(),
 });
