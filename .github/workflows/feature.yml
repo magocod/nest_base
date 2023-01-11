@@ -41,6 +41,8 @@ env:
   REDIS_HOST: localhost
   REDIS_PORT: 6379
   REDIS_PASSWORD: 123
+  # mysql
+  MYSQL_DB_NAME: nest_base
 
 jobs:
   lint:
