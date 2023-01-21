@@ -1,5 +1,5 @@
 {
-  "exclude": ["docs"],
+  "exclude": ["docs", "mysql", "redis", "postgres", "mongo", "documentation", "resources"],
   "compilerOptions": {
     "module": "commonjs",
     "declaration": true,
