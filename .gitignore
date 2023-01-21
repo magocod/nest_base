@@ -1,7 +1,6 @@
 # compiled output
 /dist
-
-documentation
+/documentation
 
 /node_modules
 
@@ -44,5 +43,6 @@ lerna-debug.log*
 /postgres
 /mongo
 /redis
+/mysql
 
 .env

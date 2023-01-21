@@ -4,7 +4,11 @@
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+[Nest](https://github.com/nestjs/nest) framework TypeScript practice repository.
+
+## Contributing
+
+Learn about contribution [here](https://github.com/magocod/nest_base/blob/main/CONTRIBUTING.md)
 
 ## Requirements
 
@@ -82,3 +86,29 @@ npm run test:cov
 npm run test:e2e
 ```
 
+### Code style
+
+- eslint check
+```bash
+npm run lint
+```
+
+- eslint fix
+```bash
+npm run lint:fix
+```
+
+- prettier check
+```bash
+npm run format:check
+```
+
+- prettier format
+```bash
+npm run format
+```
+
+### Api reference
+```bash
+npm run build:doc
+```

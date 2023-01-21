@@ -37,6 +37,8 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { join } from 'path';
 import { ApolloServerPluginLandingPageLocalDefault } from 'apollo-server-core';
 import { AppResolver } from './app.resolver';
+import { SequelizeModule } from '@nestjs/sequelize';
+import { PostsModule } from './posts/posts.module';
 
 // export function configBaseModules() {
 //   return [
@@ -62,13 +64,19 @@ import { AppResolver } from './app.resolver';
 // }
 
 // default config
-export const commonConfig = { postgres: true, mongodb: true, websocket: true };
+export const commonConfig = {
+  postgres: true,
+  mongodb: true,
+  websocket: true,
+  mysql: true,
+};
 
 // without db
 export const withoutDbConfig = {
   ...commonConfig,
   mongodb: false,
   postgres: false,
+  mysql: false,
 };
 
 // only postgresql
@@ -76,6 +84,7 @@ export const postgresConfig = {
   ...commonConfig,
   mongodb: false,
   websocket: false,
+  mysql: false,
 };
 
 // only mongodb
@@ -83,6 +92,15 @@ export const mongoConfig = {
   ...commonConfig,
   postgres: false,
   websocket: false,
+  mysql: false,
+};
+
+// only mysql
+export const mysqlConfig = {
+  ...commonConfig,
+  postgres: false,
+  websocket: false,
+  mysql: true,
 };
 
 export function configBaseModules(config = commonConfig) {
@@ -143,6 +161,22 @@ export function configBaseModules(config = commonConfig) {
     );
   }
 
+  if (config.mysql) {
+    modules.push(
+      SequelizeModule.forRoot({
+        dialect: 'mysql',
+        host: 'localhost',
+        port: 3306,
+        username: 'root',
+        password: process.env.MYSQL_DB_PASSWORD,
+        database: process.env.MYSQL_DB_NAME,
+        autoLoadModels: true,
+        synchronize: false,
+        logging: false,
+      }),
+    );
+  }
+
   return modules;
 }
 
@@ -171,6 +205,7 @@ export function configApp(app: INestApplication) {
     MessagesModule,
     NotificationsModule,
     DashboardModule,
+    PostsModule,
   ],
   controllers: [AppController],
   providers: [AppService, AppResolver],

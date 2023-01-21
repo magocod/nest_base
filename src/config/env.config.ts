@@ -28,6 +28,9 @@ export const EnvConfiguration = () => ({
   REDIS_PASSWORD: process.env.REDIS_PASSWORD,
   // websockets
   WS_PORT: process.env.WS_PORT,
+  // mysql
+  MYSQL_DB_PASSWORD: process.env.MYSQL_DB_PASSWORD,
+  MYSQL_DB_NAME: process.env.MYSQL_DB_NAME,
 });
 
 const config = EnvConfiguration();
