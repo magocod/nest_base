@@ -32,5 +32,6 @@ export const JoiValidationSchema = Joi.object<EnvConfig>({
   // websockets
   WS_PORT: Joi.number().optional(),
   // mysql
+  MYSQL_DB_PASSWORD: Joi.string().required(),
   MYSQL_DB_NAME: Joi.string().required(),
 });

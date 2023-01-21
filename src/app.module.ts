@@ -92,7 +92,6 @@ export const mongoConfig = {
   ...commonConfig,
   postgres: false,
   websocket: false,
-  mongodb: false,
   mysql: false,
 };
 
@@ -169,7 +168,7 @@ export function configBaseModules(config = commonConfig) {
         host: 'localhost',
         port: 3306,
         username: 'root',
-        password: '',
+        password: process.env.MYSQL_DB_PASSWORD,
         database: process.env.MYSQL_DB_NAME,
         autoLoadModels: true,
         synchronize: false,

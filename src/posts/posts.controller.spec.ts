@@ -18,6 +18,10 @@ describe('PostsController', () => {
     controller = module.get<PostsController>(PostsController);
   });
 
+  afterEach(async () => {
+    await module.close();
+  });
+
   it('should be defined', () => {
     expect(controller).toBeDefined();
   });

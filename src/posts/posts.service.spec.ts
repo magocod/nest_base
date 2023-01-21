@@ -16,6 +16,10 @@ describe('PostsService', () => {
     service = module.get<PostsService>(PostsService);
   });
 
+  afterEach(async () => {
+    await module.close();
+  });
+
   it('should be defined', () => {
     expect(service).toBeDefined();
   });
