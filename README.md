@@ -110,5 +110,5 @@ npm run format
 
 ### Api reference
 ```bash
-npx typedoc
+npm run build:doc
 ```
