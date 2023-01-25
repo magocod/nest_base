@@ -36,6 +36,8 @@ env:
   # mysql
   MYSQL_DB_PASSWORD: 123
   MYSQL_DB_NAME: nest_base
+  # GitHub actions
+  NODE_OPTIONS: "--max_old_space_size=4096"
 
 jobs:
   lint:
