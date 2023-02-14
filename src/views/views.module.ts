@@ -4,7 +4,7 @@ import { ViewsController } from './views.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { Category, Post } from './entities';
-import { PostCategory } from './views';
+import { PostCategory } from './views.views';
 
 @Module({
   imports: [

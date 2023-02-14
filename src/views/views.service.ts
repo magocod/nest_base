@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { DataSource } from 'typeorm';
-import { PostCategory } from './views';
+import { PostCategory } from './views.views';
 
 @Injectable()
 export class ViewsService {

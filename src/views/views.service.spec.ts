@@ -4,7 +4,7 @@ import { configBaseModules, postgresConfig } from '../app.module';
 import { ViewsModule } from './views.module';
 import { DataSource } from 'typeorm';
 import { Category, Post } from './entities';
-import { PostCategory } from './views';
+import { PostCategory } from './views.views';
 import { faker } from '@faker-js/faker';
 
 async function config(dataSource: DataSource) {
