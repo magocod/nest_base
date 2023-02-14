@@ -2,7 +2,8 @@ import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 import { TOPIC_TABLE } from '../notifications/notifications.contants';
 
 export class TopicCreate1670110209568 implements MigrationInterface {
-  public async up(queryRunner: QueryRunner): Promise<void> {await queryRunner.createTable(
+  public async up(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.createTable(
       new Table({
         name: TOPIC_TABLE,
         columns: [
@@ -42,8 +43,7 @@ export class TopicCreate1670110209568 implements MigrationInterface {
         ],
       }),
       true,
-  );
-
+    );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
