@@ -52,6 +52,7 @@
     "test:ws": "jest --testPathPattern \"./src/ws/\"",
     "test:dashboard": "jest --testPathPattern \"./src/dashboard/\"",
     "test:posts": "jest --testPathPattern \"./src/posts/\"",
+    "test:views": "jest --testPathPattern \"./src/views/\"",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "test:e2e:base": "jest --config ./test/jest-e2e.json --runTestsByPath \"./test/app.e2e-spec.ts\"",
     "test:e2e:auth": "jest --config ./test/jest-e2e.json --testPathPattern \"./test/auth\"",
