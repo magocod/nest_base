@@ -2,14 +2,16 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateNotificationDto, UpdateNotificationDto } from './dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Notification } from './entities';
-import { Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { User } from '../auth/entities';
+import { NotificationSqlRaw } from './interfaces';
 
 @Injectable()
 export class NotificationsService {
   constructor(
     @InjectRepository(Notification)
     private readonly notificationRepository: Repository<Notification>,
+    private readonly dataSource: DataSource,
   ) {}
 
   async create(createNotificationDto: CreateNotificationDto, user: User) {
@@ -23,8 +25,17 @@ export class NotificationsService {
     return notification;
   }
 
-  findAll() {
-    return `This action returns all notifications`;
+  async findAll() {
+    // It's just a practice with a raw query, in a random table
+    // purposely use users instead of notifications
+    const queryRaw: NotificationSqlRaw[] = await this.dataSource.query(
+      'SELECT * FROM users ORDER BY id DESC LIMIT 3',
+    );
+    const managerQueryRaw: NotificationSqlRaw[] =
+      await this.dataSource.manager.query(
+        'SELECT * FROM users ORDER BY id DESC LIMIT 4',
+      );
+    return { queryRaw, managerQueryRaw };
   }
 
   async findOne(id: number): Promise<Notification> {

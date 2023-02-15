@@ -39,6 +39,7 @@ import { ApolloServerPluginLandingPageLocalDefault } from 'apollo-server-core';
 import { AppResolver } from './app.resolver';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { PostsModule } from './posts/posts.module';
+import { ViewsModule } from './views/views.module';
 
 // export function configBaseModules() {
 //   return [
@@ -139,7 +140,7 @@ export function configBaseModules(config = commonConfig) {
         username: process.env.DB_USERNAME,
         password: process.env.DB_PASSWORD,
         // logging: false,
-        synchronize: false, // only for quick tests
+        // synchronize: false, // only for quick tests
         // entities: [User, Role, Permission, Notification],
         autoLoadEntities: true,
         // example generate -> typeorm migration:create ./src/migration/UserCreate
@@ -206,6 +207,7 @@ export function configApp(app: INestApplication) {
     NotificationsModule,
     DashboardModule,
     PostsModule,
+    ViewsModule,
   ],
   controllers: [AppController],
   providers: [AppService, AppResolver],

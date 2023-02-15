@@ -24,7 +24,15 @@ describe('NotificationsService', () => {
     await module.close();
   });
 
-  it('should be defined', () => {
-    expect(service).toBeDefined();
+  it('find all with, sql raw query', async () => {
+    const rs = await service.findAll();
+
+    // console.log(JSON.stringify(rs, null, 2));
+
+    expect(rs.queryRaw).toBeInstanceOf(Array);
+    expect(rs.queryRaw.length).toEqual(3);
+
+    expect(Array.isArray(rs.managerQueryRaw)).toEqual(true);
+    expect(rs.managerQueryRaw.length).toEqual(4);
   });
 });
