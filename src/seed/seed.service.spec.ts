@@ -16,7 +16,7 @@ describe('SeedService', () => {
   beforeEach(async () => {
     module = await Test.createTestingModule({
       imports: [
-        ...configBaseModules(postgresConfig),
+        ...configBaseModules({ ...postgresConfig, websocket: true }),
         AuthModule,
         NotificationsModule,
       ],
