@@ -6,12 +6,12 @@ import { Logger } from '@nestjs/common';
 
 const runSeed = async () => {
   const logger = new Logger('Bootstrap');
+  logger.log('build nest');
   const app = await NestFactory.create(SeedModule);
 
   // run
   const seedService = await app.get(SeedService);
   // console.log(await seedService.seed());
-  logger.log('start ...');
   logger.log(await seedService.seed());
 
   // const user = await app.get(UsersService);

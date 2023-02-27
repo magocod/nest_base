@@ -17,7 +17,7 @@ Learn about contribution [here](https://github.com/magocod/nest_base/blob/main/C
 - Mongodb 5 (https://www.mongodb.com/home)
 - Redis 7 (https://redis.io/)
 
-## Installation
+## 1 - Installation
 
 ```bash
 npm install
@@ -25,25 +25,40 @@ npm install
 
 Clone the ```.env.template``` file and rename it to ```.env```
 
-## Docker (optional)
+## 1.1 - Docker (optional)
 
 ```bash
 docker-compose up -d
 ```
 
-## Configure db
+## 2 - Configure db
+
+```bash
+npm run build:db
+```
+
+## 2 - Configure db manually
+
+Create db
+
+```bash
+npm run db:create
+```
+Or use database client
+
+Migrate db 
 
 ```bash
 npm run migration:run
 ```
 
-## Populate the database (optional)
+Populate the database (optional)
 
 ```bash
 npm run seed:run
 ```
 
-## Running the app
+## 3 - Running the app
 
 ```bash
 npm run start
@@ -66,7 +81,13 @@ npm run start:hmr
 npm run start:prod
 ```
 
-## Test
+## 4 - Test
+
+- run all tests
+
+```bash
+npm run test:all
+```
 
 - unit tests
 
