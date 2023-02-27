@@ -1,33 +1,46 @@
-import { Injectable } from '@nestjs/common';
-// import { InjectRepository } from '@nestjs/typeorm';
+import { Injectable, Logger } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import { User, Role, Permission } from '../auth/entities';
 import { DataSource, Repository } from 'typeorm';
 import { RoleNames, PermissionNames, DefaultEmails } from '../auth/interfaces';
-import { Topic } from '../notifications/entities/topic.entity';
+import { Topic } from '../notifications/entities';
 
 @Injectable()
 export class SeedService {
   // not working without nest app
-  // private readonly logger = new Logger('SeedService');
-  private readonly userRepository: Repository<User>;
-  private readonly roleRepository: Repository<Role>;
-  private readonly permissionRepository: Repository<Permission>;
+  private readonly logger = new Logger('SeedService');
 
-  private readonly topicRepository: Repository<Topic>;
+  // working without nest app
+  // private readonly userRepository: Repository<User>;
+  // private readonly roleRepository: Repository<Role>;
+  // private readonly permissionRepository: Repository<Permission>;
+  // private readonly topicRepository: Repository<Topic>;
 
   constructor(
-    // error inject repository
+    // error inject repository in commands
     // @InjectRepository(User)
     // private readonly userRepository: Repository<User>,
     private readonly dataSource: DataSource,
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
+    @InjectRepository(Role)
+    private readonly roleRepository: Repository<Role>,
+    @InjectRepository(Permission)
+    private readonly permissionRepository: Repository<Permission>,
+    @InjectRepository(Topic)
+    private readonly topicRepository: Repository<Topic>,
   ) {
-    this.userRepository = dataSource.getRepository(User);
-    this.roleRepository = dataSource.getRepository(Role);
-    this.permissionRepository = dataSource.getRepository(Permission);
-    this.topicRepository = dataSource.getRepository(Topic);
+    // working without nest app
+    // this.userRepository = dataSource.getRepository(User);
+    // this.roleRepository = dataSource.getRepository(Role);
+    // this.permissionRepository = dataSource.getRepository(Permission);
+    // this.topicRepository = dataSource.getRepository(Topic);
   }
 
   // for testing
+  /**
+   * @deprecated
+   */
   getDataSource(): DataSource {
     return this.dataSource;
   }
@@ -36,9 +49,11 @@ export class SeedService {
    * note: it is not safe to run seed repeatedly
    */
   async seed() {
+    this.logger.log('start');
     // TODO seed - improve saving, repeated code
 
     // auth
+    this.logger.log('auth seed');
 
     let permissions: Permission[] = [];
 
@@ -125,6 +140,8 @@ export class SeedService {
     //   ),
     // );
 
+    this.logger.log('other seed');
+
     await this.topicRepository.save([
       {
         name: 'a',
@@ -136,6 +153,8 @@ export class SeedService {
         name: 'c',
       },
     ]);
+
+    this.logger.log('completed');
 
     return {
       users: await this.userRepository.count(),

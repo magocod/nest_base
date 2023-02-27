@@ -5,6 +5,8 @@ import { SeedService } from './seed.service';
 import { configBaseModules, postgresConfig } from '../app.module';
 import { User } from '../auth/entities';
 import { DefaultEmails } from '../auth/interfaces';
+import { AuthModule } from '../auth/auth.module';
+import { NotificationsModule } from '../notifications/notifications.module';
 
 describe('SeedService', () => {
   let service: SeedService;
@@ -13,7 +15,11 @@ describe('SeedService', () => {
 
   beforeEach(async () => {
     module = await Test.createTestingModule({
-      imports: configBaseModules(postgresConfig),
+      imports: [
+        ...configBaseModules({ ...postgresConfig, websocket: true }),
+        AuthModule,
+        NotificationsModule,
+      ],
       providers: [SeedService],
     }).compile();
 
