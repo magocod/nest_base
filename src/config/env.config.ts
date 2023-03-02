@@ -31,6 +31,13 @@ export const EnvConfiguration = () => ({
   // mysql
   MYSQL_DB_PASSWORD: process.env.MYSQL_DB_PASSWORD,
   MYSQL_DB_NAME: process.env.MYSQL_DB_NAME,
+  // rabbitmq
+  RABBITMQ_HOST: process.env.RABBITMQ_HOST,
+  RABBITMQ_PORT: process.env.RABBITMQ_PORT,
+  RABBITMQ_PORT_MANAGEMENT: process.env.RABBITMQ_PORT_MANAGEMENT,
+  RABBITMQ_USERNAME: process.env.RABBITMQ_USERNAME,
+  RABBITMQ_PASSWORD: process.env.RABBITMQ_PASSWORD,
+  RABBITMQ_VHOST: process.env.RABBITMQ_VHOST,
 });
 
 const config = EnvConfiguration();

@@ -40,6 +40,7 @@ import { AppResolver } from './app.resolver';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { PostsModule } from './posts/posts.module';
 import { ViewsModule } from './views/views.module';
+import { RabbitmqModule } from './rabbitmq/rabbitmq.module';
 
 // export function configBaseModules() {
 //   return [
@@ -208,6 +209,13 @@ export function configApp(app: INestApplication) {
     DashboardModule,
     PostsModule,
     ViewsModule,
+    RabbitmqModule.forRoot({
+      RABBITMQ_HOST: process.env.RABBITMQ_HOST,
+      RABBITMQ_PORT: +process.env.RABBITMQ_PORT,
+      RABBITMQ_USERNAME: process.env.RABBITMQ_USERNAME,
+      RABBITMQ_PASSWORD: process.env.RABBITMQ_PASSWORD,
+      RABBITMQ_VHOST: process.env.RABBITMQ_VHOST,
+    }),
   ],
   controllers: [AppController],
   providers: [AppService, AppResolver],

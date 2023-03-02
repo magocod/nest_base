@@ -9,7 +9,9 @@ export class AppService {
     return 'Hello World!';
   }
 
-  // for testing
+  /**
+   * @deprecated remove
+   */
   getDataSource(): DataSource {
     return this.dataSource;
   }

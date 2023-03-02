@@ -8,10 +8,10 @@ import {
   Delete,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
-import { CreatePostDto } from './dto/create-post.dto';
-import { UpdatePostDto } from './dto/update-post.dto';
+import { CreatePostDto, UpdatePostDto } from './dto';
+import { ApiVersion } from '../app.constants';
 
-@Controller('posts')
+@Controller({ path: 'posts', version: ApiVersion.v1 })
 export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
