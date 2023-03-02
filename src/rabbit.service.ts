@@ -4,7 +4,7 @@ import * as amqplib from 'amqplib';
 import { Options, Connection, Channel } from 'amqplib';
 import { ConfigService } from '@nestjs/config';
 import { EnvConfig } from './config/env.config';
-import {ConsumeMessage} from "amqplib/properties";
+import { ConsumeMessage } from 'amqplib/properties';
 
 export const taskQueue = 'tasks';
 
@@ -21,7 +21,6 @@ export const taskQueue = 'tasks';
 // };
 
 export type ListenerFn = (msg: ConsumeMessage | null) => void;
-
 
 /**
  * @deprecated
