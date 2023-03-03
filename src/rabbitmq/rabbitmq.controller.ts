@@ -6,8 +6,24 @@ import { ApiVersion } from '../app.constants';
 export class RabbitmqController {
   constructor(private readonly rabbitmqService: RabbitmqService) {}
 
-  @Post()
-  create() {
-    return this.rabbitmqService.add();
+  @Post('tasks')
+  addTask() {
+    return this.rabbitmqService.addTask();
+  }
+
+  // crash app example
+  @Post('async_tasks')
+  addAsyncTask() {
+    return this.rabbitmqService.addAsyncTask();
+  }
+
+  @Post('sync_tasks')
+  addSyncTask() {
+    return this.rabbitmqService.addSyncTask();
+  }
+
+  @Post('error_sync_tasks')
+  addErrorSyncTask() {
+    return this.rabbitmqService.addSyncTask('error');
   }
 }

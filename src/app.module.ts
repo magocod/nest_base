@@ -41,6 +41,7 @@ import { SequelizeModule } from '@nestjs/sequelize';
 import { PostsModule } from './posts/posts.module';
 import { ViewsModule } from './views/views.module';
 import { RabbitmqModule } from './rabbitmq/rabbitmq.module';
+import { asyncTaskQueue, syncTaskQueue } from './rabbitmq/rabbitmq.constants';
 
 // export function configBaseModules() {
 //   return [
@@ -215,6 +216,69 @@ export function configApp(app: INestApplication) {
       RABBITMQ_USERNAME: process.env.RABBITMQ_USERNAME,
       RABBITMQ_PASSWORD: process.env.RABBITMQ_PASSWORD,
       RABBITMQ_VHOST: process.env.RABBITMQ_VHOST,
+      queues: [
+        {
+          queue: asyncTaskQueue,
+          onMessage: (channel, logger) => {
+            return async function (msg) {
+              // crash server
+              // throw new Error('example error');
+              if (msg !== null) {
+                // console.log('asyncTaskQueue Received:', msg.content.toString());
+                logger?.debug(
+                  'asyncTaskQueue Received:' + msg.content.toString(),
+                );
+                channel.ack(msg);
+              } else {
+                // console.log('asyncTaskQueue Consumer cancelled by server');
+                logger?.debug('asyncTaskQueue Consumer cancelled by server');
+              }
+            };
+          },
+        },
+        {
+          queue: syncTaskQueue,
+          onMessage: (channel, logger) => {
+            return function (msg) {
+              if (msg === null) {
+                // console.log('syncTaskQueue Consumer cancelled by server');
+                logger?.warn('syncTaskQueue Consumer cancelled by server');
+                return;
+              }
+
+              try {
+                const content = msg.content.toString();
+
+                if (content === 'error') {
+                  throw new Error('example error');
+                }
+
+                // console.log('syncTaskQueue Received:', content);
+                logger?.debug('syncTaskQueue Received:' + content);
+                channel.ack(msg);
+              } catch (e) {
+                if (msg?.fields?.redelivered) {
+                  // console.log('syncTaskQueue redelivered');
+                  logger?.warn(
+                    'syncTaskQueue redelivered - ' + msg?.fields?.redelivered,
+                  );
+                  channel.ack(msg);
+                  return;
+                }
+
+                if (e instanceof Error) {
+                  // console.log('syncTaskQueue throw error ' + e.message);
+                  logger?.error('syncTaskQueue throw error ' + e.message);
+                  // logger?.warn('syncTaskQueue throw error ' + e.stack);
+                } else {
+                  // console.log('syncTaskQueue throw exception ' + e);
+                  logger?.error('syncTaskQueue throw exception ' + e);
+                }
+              }
+            };
+          },
+        },
+      ],
     }),
   ],
   controllers: [AppController],
