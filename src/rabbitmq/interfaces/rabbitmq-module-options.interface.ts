@@ -1,5 +1,5 @@
-import { Channel, ConsumeMessage, Options } from 'amqplib';
-import { Logger } from '@nestjs/common';
+import { Channel, Connection, ConsumeMessage, Options } from 'amqplib';
+import { Logger, OnModuleInit } from '@nestjs/common';
 
 export interface RabbitmqModuleOptions {
   RABBITMQ_HOST: string;
@@ -16,4 +16,9 @@ export interface RabbitmqQueue {
   queue: string;
   onMessage: (channel: Channel, logger?: Logger) => RabbitmqListenerFn;
   options?: Options.Consume;
+}
+
+export interface ChannelConsumer extends OnModuleInit {
+  name: string;
+  boot(conn: Connection): Promise<Channel>;
 }

@@ -23,6 +23,9 @@ export function createRabbitmqConnectionProvider(
 
       const logger = new Logger('RabbitMq');
 
+      // They are only basic configurations of queues and practices,
+      // they do not have access to application services (not very useful in real life)
+
       // create queue directly
       const ch1 = await conn.createChannel();
       await ch1.assertQueue(taskQueue, {
@@ -39,7 +42,7 @@ export function createRabbitmqConnectionProvider(
         }
       });
 
-      // create queue from config
+      // create (basic) queue from config
       for (const queueConfig of options.queues) {
         const ch = await conn.createChannel();
         await ch.assertQueue(queueConfig.queue, {
@@ -71,4 +74,4 @@ export function createRabbitmqSenderProvider(): Provider {
   };
 }
 
-// TODO create listener providers
+// TODO create createRabbitmqListenerProvider

@@ -1,12 +1,13 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Type } from '@nestjs/common';
 
 import * as amqplib from 'amqplib';
 import { Options, Connection, Channel } from 'amqplib';
 import { ConfigService } from '@nestjs/config';
 import { EnvConfig } from './config/env.config';
+import { ModuleRef } from '@nestjs/core';
 // import { ConsumeMessage } from 'amqplib/properties';
 
-export const taskQueue = 'tasks';
+export const simpleTasks = 'simple_tasks';
 
 // export type RabbitConnectExtend = Options.Connect & { authMechanism: string[] };
 
@@ -22,13 +23,21 @@ export const taskQueue = 'tasks';
 
 // export type ListenerFn = (msg: ConsumeMessage | null) => void;
 
+export interface RabbitConsumer<T = unknown> {
+  process(): Promise<T>;
+  boot(ch: Channel): Promise<void>;
+}
+
 /**
  * @deprecated
  * only for practice - use nestjs module instead
  */
 @Injectable()
 export class RabbitService {
-  constructor(private configService: ConfigService<EnvConfig>) {}
+  constructor(
+    private configService: ConfigService<EnvConfig>,
+    private moduleRef: ModuleRef,
+  ) {}
 
   private conn: Connection;
   private sender: Channel;
@@ -87,21 +96,28 @@ export class RabbitService {
 
   async setListener(): Promise<Channel> {
     const ch1 = await this.conn.createChannel();
-    await ch1.assertQueue(taskQueue, {
+    await ch1.assertQueue(simpleTasks, {
       durable: true, // can withstand a RabbitMQ restart
     });
-    await ch1.consume(taskQueue, (msg) => {
+    await ch1.consume(simpleTasks, (msg) => {
       if (msg !== null) {
-        console.log('Received:', msg.content.toString());
+        console.log('simpleTasks Received:', msg.content.toString());
         ch1.ack(msg);
       } else {
-        console.log('Consumer cancelled by server');
+        console.log('simpleTasks Consumer cancelled by server');
       }
     });
 
     this.listener = ch1;
 
     return ch1;
+  }
+
+  async registerListener(channelClass: Type<RabbitConsumer>): Promise<Channel> {
+    const ch = await this.conn.createChannel();
+    const service = await this.moduleRef.create(channelClass);
+    await service.boot(ch);
+    return ch;
   }
 
   /**

@@ -5,11 +5,13 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { Category, Post } from './entities';
 import { PostCategory } from './views.views';
+import { RabbitmqModule } from '../rabbitmq/rabbitmq.module';
 
 @Module({
   imports: [
     ConfigModule,
     TypeOrmModule.forFeature([Category, Post, PostCategory]),
+    RabbitmqModule,
   ],
   controllers: [ViewsController],
   providers: [ViewsService],

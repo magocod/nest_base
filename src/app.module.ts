@@ -3,6 +3,8 @@ import {
   ValidationPipe,
   INestApplication,
   VersioningType,
+  // OnModuleDestroy,
+  // OnModuleInit,
 } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -42,6 +44,9 @@ import { PostsModule } from './posts/posts.module';
 import { ViewsModule } from './views/views.module';
 import { RabbitmqModule } from './rabbitmq/rabbitmq.module';
 import { asyncTaskQueue, syncTaskQueue } from './rabbitmq/rabbitmq.constants';
+// import { ModuleRef } from '@nestjs/core';
+// import { RabbitService } from './rabbit.service';
+// import { RabbitChannel } from './rabbit.channel';
 
 // export function configBaseModules() {
 //   return [
@@ -72,6 +77,7 @@ export const commonConfig = {
   mongodb: true,
   websocket: true,
   mysql: true,
+  rabbitmq: true,
 };
 
 // without db
@@ -80,6 +86,7 @@ export const withoutDbConfig = {
   mongodb: false,
   postgres: false,
   mysql: false,
+  rabbitmq: false,
 };
 
 // only postgresql
@@ -88,6 +95,7 @@ export const postgresConfig = {
   mongodb: false,
   websocket: false,
   mysql: false,
+  rabbitmq: false,
 };
 
 // only mongodb
@@ -96,6 +104,7 @@ export const mongoConfig = {
   postgres: false,
   websocket: false,
   mysql: false,
+  rabbitmq: false,
 };
 
 // only mysql
@@ -103,7 +112,16 @@ export const mysqlConfig = {
   ...commonConfig,
   postgres: false,
   websocket: false,
-  mysql: true,
+  mongodb: false,
+  rabbitmq: false,
+};
+
+export const rabbitmqConfig = {
+  ...commonConfig,
+  postgres: false,
+  websocket: false,
+  mongodb: false,
+  mysql: false,
 };
 
 export function configBaseModules(config = commonConfig) {
@@ -180,6 +198,81 @@ export function configBaseModules(config = commonConfig) {
     );
   }
 
+  if (config.rabbitmq) {
+    modules.push(
+      RabbitmqModule.forRoot({
+        RABBITMQ_HOST: process.env.RABBITMQ_HOST,
+        RABBITMQ_PORT: +process.env.RABBITMQ_PORT,
+        RABBITMQ_USERNAME: process.env.RABBITMQ_USERNAME,
+        RABBITMQ_PASSWORD: process.env.RABBITMQ_PASSWORD,
+        RABBITMQ_VHOST: process.env.RABBITMQ_VHOST,
+        queues: [
+          {
+            queue: asyncTaskQueue,
+            onMessage: (channel, logger) => {
+              return async function (msg) {
+                // crash server
+                // throw new Error('example error');
+                if (msg !== null) {
+                  // console.log('asyncTaskQueue Received:', msg.content.toString());
+                  logger?.debug(
+                    'asyncTaskQueue Received:' + msg.content.toString(),
+                  );
+                  channel.ack(msg);
+                } else {
+                  // console.log('asyncTaskQueue Consumer cancelled by server');
+                  logger?.debug('asyncTaskQueue Consumer cancelled by server');
+                }
+              };
+            },
+          },
+          {
+            queue: syncTaskQueue,
+            onMessage: (channel, logger) => {
+              return function (msg) {
+                if (msg === null) {
+                  // console.log('syncTaskQueue Consumer cancelled by server');
+                  logger?.warn('syncTaskQueue Consumer cancelled by server');
+                  return;
+                }
+
+                try {
+                  const content = msg.content.toString();
+
+                  if (content === 'error') {
+                    throw new Error('example error');
+                  }
+
+                  // console.log('syncTaskQueue Received:', content);
+                  logger?.debug('syncTaskQueue Received:' + content);
+                  channel.ack(msg);
+                } catch (e) {
+                  if (msg?.fields?.redelivered) {
+                    // console.log('syncTaskQueue redelivered');
+                    logger?.warn(
+                      'syncTaskQueue redelivered - ' + msg?.fields?.redelivered,
+                    );
+                    channel.ack(msg);
+                    return;
+                  }
+
+                  if (e instanceof Error) {
+                    // console.log('syncTaskQueue throw error ' + e.message);
+                    logger?.error('syncTaskQueue throw error ' + e.message);
+                    // logger?.warn('syncTaskQueue throw error ' + e.stack);
+                  } else {
+                    // console.log('syncTaskQueue throw exception ' + e);
+                    logger?.error('syncTaskQueue throw exception ' + e);
+                  }
+                }
+              };
+            },
+          },
+        ],
+      }),
+    );
+  }
+
   return modules;
 }
 
@@ -210,78 +303,33 @@ export function configApp(app: INestApplication) {
     DashboardModule,
     PostsModule,
     ViewsModule,
-    RabbitmqModule.forRoot({
-      RABBITMQ_HOST: process.env.RABBITMQ_HOST,
-      RABBITMQ_PORT: +process.env.RABBITMQ_PORT,
-      RABBITMQ_USERNAME: process.env.RABBITMQ_USERNAME,
-      RABBITMQ_PASSWORD: process.env.RABBITMQ_PASSWORD,
-      RABBITMQ_VHOST: process.env.RABBITMQ_VHOST,
-      queues: [
-        {
-          queue: asyncTaskQueue,
-          onMessage: (channel, logger) => {
-            return async function (msg) {
-              // crash server
-              // throw new Error('example error');
-              if (msg !== null) {
-                // console.log('asyncTaskQueue Received:', msg.content.toString());
-                logger?.debug(
-                  'asyncTaskQueue Received:' + msg.content.toString(),
-                );
-                channel.ack(msg);
-              } else {
-                // console.log('asyncTaskQueue Consumer cancelled by server');
-                logger?.debug('asyncTaskQueue Consumer cancelled by server');
-              }
-            };
-          },
-        },
-        {
-          queue: syncTaskQueue,
-          onMessage: (channel, logger) => {
-            return function (msg) {
-              if (msg === null) {
-                // console.log('syncTaskQueue Consumer cancelled by server');
-                logger?.warn('syncTaskQueue Consumer cancelled by server');
-                return;
-              }
-
-              try {
-                const content = msg.content.toString();
-
-                if (content === 'error') {
-                  throw new Error('example error');
-                }
-
-                // console.log('syncTaskQueue Received:', content);
-                logger?.debug('syncTaskQueue Received:' + content);
-                channel.ack(msg);
-              } catch (e) {
-                if (msg?.fields?.redelivered) {
-                  // console.log('syncTaskQueue redelivered');
-                  logger?.warn(
-                    'syncTaskQueue redelivered - ' + msg?.fields?.redelivered,
-                  );
-                  channel.ack(msg);
-                  return;
-                }
-
-                if (e instanceof Error) {
-                  // console.log('syncTaskQueue throw error ' + e.message);
-                  logger?.error('syncTaskQueue throw error ' + e.message);
-                  // logger?.warn('syncTaskQueue throw error ' + e.stack);
-                } else {
-                  // console.log('syncTaskQueue throw exception ' + e);
-                  logger?.error('syncTaskQueue throw exception ' + e);
-                }
-              }
-            };
-          },
-        },
-      ],
-    }),
   ],
   controllers: [AppController],
-  providers: [AppService, AppResolver],
+  providers: [
+    AppService,
+    AppResolver,
+    // RabbitService
+  ],
 })
 export class AppModule {}
+// export class AppModule implements OnModuleInit, OnModuleDestroy {
+//   constructor(private moduleRef: ModuleRef) {}
+//
+//   async onModuleInit() {
+//     // console.log('AppModule.OnModuleInit');
+//     const rabbitService = await this.moduleRef.get<RabbitService>(
+//       RabbitService,
+//     );
+//     await rabbitService.boot();
+//     await rabbitService.setListener();
+//     await rabbitService.registerListener(RabbitChannel);
+//   }
+//
+//   async onModuleDestroy() {
+//     // console.log('AppModule.onModuleDestroy');
+//     const rabbitService = await this.moduleRef.get<RabbitService>(
+//       RabbitService,
+//     );
+//     await rabbitService.close();
+//   }
+// }
