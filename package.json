@@ -111,6 +111,7 @@
     "sequelize": "^6.28.0",
     "sequelize-typescript": "^2.1.5",
     "socket.io": "^4.5.4",
+    "typeorm": "^0.3.12",
     "typeorm-extension": "^2.5.2",
     "uuid": "^9.0.0",
     "ws": "^8.12.0"
