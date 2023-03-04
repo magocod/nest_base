@@ -10,7 +10,10 @@ describe('ViewsController', () => {
 
   beforeEach(async () => {
     module = await Test.createTestingModule({
-      imports: [...configBaseModules({ ...postgresConfig }), ViewsModule],
+      imports: [
+        ...configBaseModules({ ...postgresConfig, rabbitmq: true }),
+        ViewsModule,
+      ],
       // controllers: [ViewsController],
       // providers: [ViewsService],
     }).compile();
