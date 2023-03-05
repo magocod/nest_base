@@ -23,6 +23,9 @@ export const simpleTasks = 'simple_tasks';
 
 // export type ListenerFn = (msg: ConsumeMessage | null) => void;
 
+/**
+ * @deprecated
+ */
 export interface RabbitConsumer<T = unknown> {
   process(): Promise<T>;
   boot(ch: Channel): Promise<void>;

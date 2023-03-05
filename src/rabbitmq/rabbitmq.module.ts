@@ -1,8 +1,10 @@
 import { DynamicModule, Module } from '@nestjs/common';
 import { RabbitmqService } from './rabbitmq.service';
 import { RabbitmqController } from './rabbitmq.controller';
-import { RabbitmqModuleOptions } from './interfaces';
+import { ChannelConsumerType, RabbitmqModuleOptions } from './interfaces';
 import { RabbitmqCoreModule } from './rabbitmq-core.module';
+import { DiscoveryModule } from '@nestjs/core';
+import { createRabbitmqConsumerProvider } from './rabbitmq.provider';
 
 @Module({
   controllers: [RabbitmqController],
@@ -43,9 +45,18 @@ export class RabbitmqModule {
   static forRoot(options: RabbitmqModuleOptions): DynamicModule {
     return {
       module: RabbitmqModule,
-      imports: [RabbitmqCoreModule.forRoot(options)],
+      imports: [DiscoveryModule, RabbitmqCoreModule.forRoot(options)],
+      providers: [],
+      exports: [DiscoveryModule],
     };
   }
 
-  // TODO forFeature
+  static forFeature(moduleName: string, consumers: ChannelConsumerType[]) {
+    const provider = createRabbitmqConsumerProvider(moduleName, consumers);
+    return {
+      module: RabbitmqModule,
+      providers: [provider],
+      exports: [],
+    };
+  }
 }

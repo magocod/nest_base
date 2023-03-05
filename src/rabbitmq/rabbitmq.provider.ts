@@ -1,9 +1,15 @@
 import { RABBITMQ_CONNECTION, RABBITMQ_SENDER } from './rabbitmq.constants';
 import { Logger, Provider } from '@nestjs/common';
-import { RabbitmqModuleOptions } from './interfaces';
+import {
+  ChannelConsumerProvider,
+  ChannelConsumerType,
+  RabbitmqModuleOptions,
+} from './interfaces';
 import * as amqplib from 'amqplib';
 import { Options, Connection } from 'amqplib';
 import { taskQueue } from './rabbitmq.constants';
+import { getConsumerChannelToken } from './rabbitmq.utils';
+// import { ModuleRef } from '@nestjs/core';
 
 export function createRabbitmqConnectionProvider(
   options: RabbitmqModuleOptions,
@@ -73,5 +79,20 @@ export function createRabbitmqSenderProvider(): Provider {
     inject: [RABBITMQ_CONNECTION],
   };
 }
-
-// TODO create createRabbitmqListenerProvider
+export function createRabbitmqConsumerProvider(
+  moduleName: string,
+  consumers: ChannelConsumerType[],
+): Provider {
+  return {
+    provide: getConsumerChannelToken(moduleName),
+    useFactory: () => {
+      const wrappers: ChannelConsumerProvider[] = consumers.map((c) => {
+        return {
+          name: c.name,
+          class: c,
+        };
+      });
+      return wrappers;
+    },
+  };
+}

@@ -44,6 +44,8 @@ import { PostsModule } from './posts/posts.module';
 import { ViewsModule } from './views/views.module';
 import { RabbitmqModule } from './rabbitmq/rabbitmq.module';
 import { asyncTaskQueue, syncTaskQueue } from './rabbitmq/rabbitmq.constants';
+import { CategoryChannel } from './views/category.channel';
+import { RabbitmqExplorer } from './rabbitmq/rabbitmq.explorer';
 // import { ModuleRef } from '@nestjs/core';
 // import { RabbitService } from './rabbit.service';
 // import { RabbitChannel } from './rabbit.channel';
@@ -269,6 +271,7 @@ export function configBaseModules(config = commonConfig) {
             },
           },
         ],
+        consumers: [CategoryChannel],
       }),
     );
   }
@@ -308,7 +311,8 @@ export function configApp(app: INestApplication) {
   providers: [
     AppService,
     AppResolver,
-    // RabbitService
+    // RabbitService,
+    RabbitmqExplorer,
   ],
 })
 export class AppModule {}

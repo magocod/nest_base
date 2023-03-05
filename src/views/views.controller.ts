@@ -4,7 +4,7 @@ import { ApiVersion } from '../app.constants';
 // import { RabbitmqService } from '../rabbitmq/rabbitmq.service';
 import { RABBITMQ_SENDER } from '../rabbitmq/rabbitmq.constants';
 import { Channel } from 'amqplib';
-import { viewTask } from './views.contants';
+import { categoryTasks, postTasks } from './views.contants';
 
 @Controller({ path: 'views', version: ApiVersion.v1 })
 export class ViewsController {
@@ -18,9 +18,15 @@ export class ViewsController {
     return this.viewsService.findAll();
   }
 
-  @Post('queue')
-  queue() {
+  @Post('category_queue')
+  category_queue() {
     // return this.rabbitmqService.addTask();
-    return this.sender.sendToQueue(viewTask, Buffer.from('something to do'));
+    return this.sender.sendToQueue(categoryTasks, Buffer.from('a'));
+  }
+
+  @Post('post_queue')
+  post_queue() {
+    // return this.rabbitmqService.addTask();
+    return this.sender.sendToQueue(postTasks, Buffer.from('b'));
   }
 }

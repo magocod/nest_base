@@ -4,10 +4,12 @@ import {
   Logger,
   Module,
   OnApplicationShutdown,
+  // OnModuleInit,
 } from '@nestjs/common';
 import { RabbitmqModuleOptions } from './interfaces';
 import {
   createRabbitmqConnectionProvider,
+  createRabbitmqConsumerProvider,
   createRabbitmqSenderProvider,
 } from './rabbitmq.provider';
 import { ModuleRef } from '@nestjs/core';
@@ -32,10 +34,14 @@ export class RabbitmqCoreModule implements OnApplicationShutdown {
   static forRoot(options: RabbitmqModuleOptions): DynamicModule {
     const connectionProvider = createRabbitmqConnectionProvider(options);
     const senderProvider = createRabbitmqSenderProvider();
+    const consumerProviders = createRabbitmqConsumerProvider(
+      RabbitmqCoreModule.name,
+      options.consumers,
+    );
     return {
       module: RabbitmqCoreModule,
-      providers: [connectionProvider, senderProvider],
-      exports: [connectionProvider, senderProvider],
+      providers: [connectionProvider, senderProvider, consumerProviders],
+      exports: [connectionProvider, senderProvider, consumerProviders],
     };
   }
 }
