@@ -44,6 +44,13 @@ env:
   # mysql
   MYSQL_DB_PASSWORD: 123
   MYSQL_DB_NAME: nest_base
+  # rabbitmq
+  RABBITMQ_HOST: localhost
+  RABBITMQ_PORT: 5672
+  RABBITMQ_PORT_MANAGEMENT: 15672
+  RABBITMQ_USERNAME: admin
+  RABBITMQ_PASSWORD: 123
+  RABBITMQ_VHOST: "/"
   # GitHub actions
   NODE_OPTIONS: "--max_old_space_size=4096"
 
@@ -126,6 +133,14 @@ jobs:
         ports:
           - 3306:3306
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
+      rabbitmq:
+        image: rabbitmq:3.8
+        env:
+          RABBITMQ_DEFAULT_USER: ${{ env.RABBITMQ_USERNAME }}
+          RABBITMQ_DEFAULT_PASS: ${{ env.RABBITMQ_PASSWORD }}
+        ports:
+          - 5672:5672
 
     steps:
       - uses: actions/checkout@v3

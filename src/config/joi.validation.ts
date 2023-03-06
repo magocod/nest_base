@@ -34,4 +34,11 @@ export const JoiValidationSchema = Joi.object<EnvConfig>({
   // mysql
   MYSQL_DB_PASSWORD: Joi.string().required(),
   MYSQL_DB_NAME: Joi.string().required(),
+  // rabbitmq
+  RABBITMQ_HOST: Joi.string().required(),
+  RABBITMQ_PORT: Joi.number().optional(),
+  RABBITMQ_PORT_MANAGEMENT: Joi.number().optional(),
+  RABBITMQ_USERNAME: Joi.string().required(),
+  RABBITMQ_PASSWORD: Joi.string().required(),
+  RABBITMQ_VHOST: Joi.string().required(),
 });

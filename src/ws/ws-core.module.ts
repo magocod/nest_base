@@ -1,6 +1,7 @@
 import {
   DynamicModule,
   Global,
+  Logger,
   Module,
   OnApplicationShutdown,
 } from '@nestjs/common';
@@ -22,6 +23,8 @@ import { WS_SERVER } from './ws.contants';
 @Global()
 @Module({})
 export class WsCoreModule implements OnApplicationShutdown {
+  private readonly logger = new Logger('WsCoreModule');
+
   constructor(
     // @Inject(WSS_MODULE_OPTIONS)
     // private readonly options: WsModuleOptions,
@@ -53,15 +56,19 @@ export class WsCoreModule implements OnApplicationShutdown {
     //   });
     // });
     if (wss.isBooted()) {
-      await new Promise((resolve, reject) => {
-        wss.getInstance().close((err) => {
-          if (err) {
-            return reject(err);
-          }
+      try {
+        await new Promise((resolve, reject) => {
+          wss.getInstance().close((err) => {
+            if (err) {
+              return reject(err);
+            }
 
-          resolve(0);
+            resolve(0);
+          });
         });
-      });
+      } catch (e) {
+        this.logger.error(e?.message);
+      }
     }
   }
 }

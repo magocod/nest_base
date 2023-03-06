@@ -26,7 +26,7 @@ async function config(dataSource: DataSource) {
   post2.categoryId = category2.id;
   await dataSource.manager.save(post2);
 
-  return { category1 };
+  return { category1, post1 };
 }
 
 describe('ViewsService', () => {
@@ -36,7 +36,10 @@ describe('ViewsService', () => {
 
   beforeAll(async () => {
     module = await Test.createTestingModule({
-      imports: [...configBaseModules({ ...postgresConfig }), ViewsModule],
+      imports: [
+        ...configBaseModules({ ...postgresConfig, rabbitmq: true }),
+        ViewsModule,
+      ],
       // providers: [ViewsService],
     }).compile();
 
@@ -49,11 +52,11 @@ describe('ViewsService', () => {
   });
 
   it('find all with view', async () => {
-    const { category1 } = await config(ds);
+    const { post1 } = await config(ds);
 
     const postCategories = await service.findAll();
     const postCategory = await ds.manager.findOneBy(PostCategory, {
-      id: category1.id,
+      id: post1.id,
     });
 
     // console.log(JSON.stringify(postCategories, null, 2));

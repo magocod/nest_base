@@ -44,5 +44,6 @@ lerna-debug.log*
 /mongo
 /redis
 /mysql
+/rabbitmq
 
 .env

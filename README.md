@@ -16,6 +16,7 @@ Learn about contribution [here](https://github.com/magocod/nest_base/blob/main/C
 - Postgresql 14 (https://www.postgresql.org/)
 - Mongodb 5 (https://www.mongodb.com/home)
 - Redis 7 (https://redis.io/)
+- RabbitMq 3 (https://www.rabbitmq.com/)
 
 ## 1 - Installation
 
