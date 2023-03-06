@@ -13,6 +13,8 @@ import {
 import { StoryService } from './story.service';
 import { OwnerService } from './owner.service';
 import { OwnerController } from './owner.controller';
+import { RabbitmqModule } from '../rabbitmq/rabbitmq.module';
+import { CatsChannel } from './cats.channel';
 
 @Module({
   imports: [
@@ -21,8 +23,10 @@ import { OwnerController } from './owner.controller';
       { name: Owner.name, schema: OwnerSchema },
       { name: Story.name, schema: StorySchema },
     ]),
+    RabbitmqModule.forFeature(CatsModule.name, [CatsChannel]),
   ],
   controllers: [CatsController, OwnerController],
   providers: [CatsService, StoryService, OwnerService],
+  exports: [MongooseModule],
 })
 export class CatsModule {}

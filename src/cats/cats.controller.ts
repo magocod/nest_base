@@ -26,6 +26,11 @@ export class CatsController {
     return this.catsService.create(createCatDto);
   }
 
+  @Post('create_with_queue')
+  createWithQueue(@Body() createCatDto: CreateCatDto) {
+    return this.catsService.createWithQueue(createCatDto);
+  }
+
   @Get()
   findAll(@Query() paginationDto: PaginationMongoDto) {
     return this.catsService.findAll(paginationDto);

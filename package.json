@@ -35,7 +35,7 @@
     "mysql:create:db:debug": "npm run build & sequelize-cli db:create --debug",
     "mysql:create:db:dist": "sequelize-cli db:create",
     "mysql:migrate": "npm run build & sequelize-cli db:migrate",
-    "mysql:migrate:debug": "npm run build & sequelize-cli db:migrate  --debug",
+    "mysql:migrate:debug": "npm run build & sequelize-cli db:migrate --debug",
     "mysql:migrate:dist": "sequelize-cli db:migrate",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\"",
     "lint:fix": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",

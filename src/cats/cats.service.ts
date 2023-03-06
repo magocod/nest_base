@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { InjectConnection, InjectModel } from '@nestjs/mongoose';
 import { CreateCatDto, PaginationCatDto, UpdateCatDto } from './dto';
 import { Cat, CatDocument } from './entities';
@@ -7,12 +7,18 @@ import { PaginationMongoDto } from '../common/dtos';
 import { DEFAULT_LIMIT_PAGINATION, PaginationMongo } from '../common/utils';
 import { CountStageResult } from '../common/interfaces';
 import { CatAggregateResult } from './interfaces';
+import { RABBITMQ_SENDER } from '../rabbitmq/rabbitmq.constants';
+import { Channel } from 'amqplib';
+import { catTasks } from './cats.constants';
+// import { RabbitmqProducer } from '../rabbitmq/decorators';
 
+// @RabbitmqProducer('extra')
 @Injectable()
 export class CatsService {
   constructor(
     @InjectModel(Cat.name) private catModel: Model<CatDocument>,
     @InjectConnection() private connection: Connection,
+    @Inject(RABBITMQ_SENDER) public sender: Channel,
   ) {}
 
   getConnection(): Connection {
@@ -27,6 +33,13 @@ export class CatsService {
     const createdCat = await this.catModel.create(createCatDto);
     // ...
     return createdCat;
+  }
+
+  async createWithQueue(createCatDto: CreateCatDto) {
+    return this.sender.sendToQueue(
+      catTasks,
+      Buffer.from(JSON.stringify(createCatDto)),
+    );
   }
 
   async findAll(paginationDto: PaginationMongoDto) {

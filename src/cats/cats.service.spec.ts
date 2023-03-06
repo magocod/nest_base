@@ -23,7 +23,10 @@ describe('CatsService', () => {
 
   beforeAll(async () => {
     module = await Test.createTestingModule({
-      imports: [...configBaseModules(mongoConfig), CatsModule],
+      imports: [
+        ...configBaseModules({ ...mongoConfig, rabbitmq: true }),
+        CatsModule,
+      ],
       // providers: [CatsService],
     }).compile();
 
