@@ -22,17 +22,23 @@ export interface RabbitmqQueue {
   options?: Options.Consume;
 }
 
+export interface CanInitializeConsumer {
+  boot(ch: Channel): Promise<void>;
+}
+
 /**
  * T = ResultQueue ...
  *
  * P = PayloadQueue ...
  */
-export interface ChannelConsumer<T = unknown, P = unknown> {
+export interface ChannelConsumer<T = unknown, P = unknown>
+  extends CanInitializeConsumer {
   process(payload: P): Promise<T>;
-  boot(ch: Channel): Promise<void>;
+  onSuccess?(result: T): Promise<void>;
+  onError?(result: Error): Promise<void>;
 }
 
-export type ChannelConsumerType = Type<ChannelConsumer>;
+export type ChannelConsumerType = Type<ChannelConsumer | CanInitializeConsumer>;
 
 export interface ChannelConsumerProvider {
   name: string;

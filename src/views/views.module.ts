@@ -7,15 +7,16 @@ import { Category, Post } from './entities';
 import { PostCategory } from './views.views';
 import { RabbitmqModule } from '../rabbitmq/rabbitmq.module';
 import { PostChannel } from './post.channel';
+import { ViewsChannel } from './views.channel';
 
 @Module({
   imports: [
     ConfigModule,
     TypeOrmModule.forFeature([Category, Post, PostCategory]),
-    RabbitmqModule.forFeature(ViewsModule.name, [PostChannel]),
+    RabbitmqModule.forFeature(ViewsModule.name, [PostChannel, ViewsChannel]),
   ],
   controllers: [ViewsController],
   providers: [ViewsService],
-  exports: [TypeOrmModule],
+  exports: [TypeOrmModule, ViewsService],
 })
 export class ViewsModule {}
