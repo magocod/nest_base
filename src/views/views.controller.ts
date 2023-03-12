@@ -5,7 +5,9 @@ import { ApiVersion } from '../app.constants';
 import { RABBITMQ_SENDER } from '../rabbitmq/rabbitmq.constants';
 import { Channel } from 'amqplib';
 import { categoryTasks, postTasks, viewTasks } from './views.contants';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Views')
 @Controller({ path: 'views', version: ApiVersion.v1 })
 export class ViewsController {
   constructor(

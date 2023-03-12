@@ -10,7 +10,9 @@ import {
 import { PostsService } from './posts.service';
 import { CreatePostDto, UpdatePostDto } from './dto';
 import { ApiVersion } from '../app.constants';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Posts')
 @Controller({ path: 'posts', version: ApiVersion.v1 })
 export class PostsController {
   constructor(private readonly postsService: PostsService) {}
