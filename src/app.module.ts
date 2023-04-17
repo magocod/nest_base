@@ -33,12 +33,12 @@ import { NotificationsModule } from './notifications/notifications.module';
 // import { Notification } from './notifications/entities';
 import { WsModule } from './ws/ws.module';
 // import { WsModule } from './ws/ws.module';
-import { DashboardModule } from './dashboard/dashboard.module';
-import { GraphQLModule } from '@nestjs/graphql';
-import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+// import { DashboardModule } from './dashboard/dashboard.module';
+// import { GraphQLModule } from '@nestjs/graphql';
+// import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { join } from 'path';
-import { ApolloServerPluginLandingPageLocalDefault } from 'apollo-server-core';
-import { AppResolver } from './app.resolver';
+// import { ApolloServerPluginLandingPageLocalDefault } from 'apollo-server-core';
+// import { AppResolver } from './app.resolver';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { PostsModule } from './posts/posts.module';
 import { ViewsModule } from './views/views.module';
@@ -144,12 +144,12 @@ export function configBaseModules(config = commonConfig) {
       //   duration: 8000,
       // },
     }),
-    GraphQLModule.forRoot<ApolloDriverConfig>({
-      driver: ApolloDriver,
-      autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
-      playground: false,
-      plugins: [ApolloServerPluginLandingPageLocalDefault],
-    }),
+    // GraphQLModule.forRoot<ApolloDriverConfig>({
+    //   driver: ApolloDriver,
+    //   autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
+    //   playground: false,
+    //   plugins: [ApolloServerPluginLandingPageLocalDefault],
+    // }),
   ];
 
   if (config.postgres) {
@@ -303,14 +303,14 @@ export function configApp(app: INestApplication) {
     AudioModule,
     MessagesModule,
     NotificationsModule,
-    DashboardModule,
+    // DashboardModule,
     PostsModule,
     ViewsModule,
   ],
   controllers: [AppController],
   providers: [
     AppService,
-    AppResolver,
+    // AppResolver,
     // RabbitService,
     RabbitmqExplorer,
   ],

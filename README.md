@@ -28,6 +28,12 @@ Clone the ```.env.template``` file and rename it to ```.env```
 
 ## 1.1 - Docker (optional)
 
+Compose V2
+```bash
+docker compose up -d
+```
+
+Compose V1
 ```bash
 docker-compose up -d
 ```
@@ -138,6 +144,10 @@ npm run build:doc
 ### Check project dependencies
 
 Show all new dependencies (excluding peerDependencies) for the project, https://www.npmjs.com/package/npm-check-updates
+
+```bash
+npm install -g npm-check-updates
+```
 
 ```bash
 ncu
