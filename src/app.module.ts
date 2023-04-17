@@ -36,7 +36,7 @@ import { WsModule } from './ws/ws.module';
 // import { DashboardModule } from './dashboard/dashboard.module';
 // import { GraphQLModule } from '@nestjs/graphql';
 // import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
-import { join } from 'path';
+// import { join } from 'path';
 // import { ApolloServerPluginLandingPageLocalDefault } from 'apollo-server-core';
 // import { AppResolver } from './app.resolver';
 import { SequelizeModule } from '@nestjs/sequelize';

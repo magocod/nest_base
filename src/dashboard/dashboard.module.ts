@@ -5,7 +5,7 @@ import { DashboardService } from './dashboard.service';
 @Module({
   providers: [
     // DashboardResolver,
-    DashboardService
+    DashboardService,
   ],
 })
 export class DashboardModule {}
